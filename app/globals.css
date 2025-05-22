@@ -1,0 +1,350 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Modo claro - Cyberpunk */
+    --background: 262 30% 95%;
+    --foreground: 262 80% 20%;
+
+    --card: 262 30% 98%;
+    --card-foreground: 262 80% 20%;
+
+    --popover: 262 30% 98%;
+    --popover-foreground: 262 80% 20%;
+
+    --primary: 334 100% 58%;
+    --primary-foreground: 262 30% 98%;
+
+    --secondary: 186 100% 47%;
+    --secondary-foreground: 262 30% 98%;
+
+    --muted: 262 30% 90%;
+    --muted-foreground: 262 50% 40%;
+
+    --accent: 300 100% 40%;
+    --accent-foreground: 262 30% 98%;
+
+    --destructive: 0 100% 50%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 262 30% 85%;
+    --input: 262 30% 85%;
+    --ring: 334 100% 58%;
+
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    /* Modo oscuro - Cyberpunk */
+    --background: 262 90% 5%;
+    --foreground: 180 100% 80%;
+
+    --card: 262 80% 10%;
+    --card-foreground: 180 100% 80%;
+
+    --popover: 262 80% 10%;
+    --popover-foreground: 180 100% 80%;
+
+    --primary: 334 100% 58%;
+    --primary-foreground: 262 90% 5%;
+
+    --secondary: 186 100% 47%;
+    --secondary-foreground: 262 90% 5%;
+
+    --muted: 262 50% 15%;
+    --muted-foreground: 180 70% 70%;
+
+    --accent: 300 100% 40%;
+    --accent-foreground: 180 100% 80%;
+
+    --destructive: 0 100% 50%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 262 50% 20%;
+    --input: 262 50% 20%;
+    --ring: 334 100% 58%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  /* Prevenir scroll horizontal */
+  html,
+  body {
+    overflow-x: hidden;
+    position: relative;
+    width: 100%;
+  }
+
+  /* Modo claro - Fondo con cuadrícula */
+  body {
+    @apply bg-background text-foreground;
+    background-image: linear-gradient(to bottom, rgba(255, 42, 109, 0.05) 1px, transparent 1px),
+      linear-gradient(to right, rgba(255, 42, 109, 0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+    background-position: center;
+  }
+
+  /* Efecto de líneas horizontales para modo claro */
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(255, 42, 109, 0.03) 0px,
+      rgba(255, 42, 109, 0.03) 1px,
+      transparent 1px,
+      transparent 8px
+    );
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  /* Modo oscuro - Fondo con cuadrícula */
+  .dark body {
+    background-image: linear-gradient(to bottom, rgba(5, 217, 232, 0.05) 1px, transparent 1px),
+      linear-gradient(to right, rgba(5, 217, 232, 0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+    background-position: center;
+  }
+
+  /* Efecto de líneas horizontales para modo oscuro */
+  .dark body::before {
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(5, 217, 232, 0.03) 0px,
+      rgba(5, 217, 232, 0.03) 1px,
+      transparent 1px,
+      transparent 8px
+    );
+  }
+}
+
+/* Estilos para las tarjetas de votación */
+.vote-card {
+  @apply transition-all duration-300 transform hover:scale-105 hover:shadow-lg relative;
+}
+
+/* Efecto de borde brillante para tarjetas en modo claro */
+.vote-card::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  background: linear-gradient(45deg, hsl(var(--primary)), hsl(var(--secondary)));
+  border-radius: calc(var(--radius) + 1px);
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.vote-card:hover::before {
+  opacity: 1;
+}
+
+/* Estilos específicos para modo claro */
+.vote-card-selected {
+  @apply bg-primary text-primary-foreground shadow-md scale-105;
+  box-shadow: 0 0 15px rgba(255, 42, 109, 0.5);
+}
+
+/* Estilos específicos para modo oscuro */
+.dark .vote-card-selected {
+  box-shadow: 0 0 15px rgba(255, 42, 109, 0.7);
+}
+
+.vote-card-selected.bg-secondary {
+  box-shadow: 0 0 15px rgba(5, 217, 232, 0.5);
+}
+
+.dark .vote-card-selected.bg-secondary {
+  box-shadow: 0 0 15px rgba(5, 217, 232, 0.7);
+}
+
+/* Reemplazar animación con gradiente estático */
+.gradient-header {
+  background: linear-gradient(90deg, hsl(var(--primary)), hsl(var(--secondary)), hsl(var(--accent)));
+  position: relative;
+}
+
+.gradient-header::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  opacity: 0.5;
+}
+
+/* Efectos de neón para modo claro */
+.neon-text {
+  position: relative;
+  color: hsl(var(--primary));
+  font-weight: bold;
+}
+
+.dark .neon-text {
+  text-shadow: 0 0 5px rgba(255, 42, 109, 0.7), 0 0 10px rgba(255, 42, 109, 0.5), 0 0 15px rgba(255, 42, 109, 0.3);
+}
+
+.neon-text-secondary {
+  position: relative;
+  color: hsl(var(--secondary));
+  font-weight: bold;
+}
+
+.dark .neon-text-secondary {
+  text-shadow: 0 0 5px rgba(5, 217, 232, 0.7), 0 0 10px rgba(5, 217, 232, 0.5), 0 0 15px rgba(5, 217, 232, 0.3);
+}
+
+/* Borde neón estático */
+.neon-border {
+  position: relative;
+}
+
+.neon-border::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  background: linear-gradient(45deg, hsl(var(--primary)), hsl(var(--secondary)), hsl(var(--accent)));
+  border-radius: calc(var(--radius) + 1px);
+  z-index: -1;
+}
+
+/* Simplificar el efecto de glitch para evitar problemas de layout */
+.glitch-text {
+  position: relative;
+  color: transparent;
+  background: linear-gradient(90deg, hsl(var(--primary)), hsl(var(--secondary)), hsl(var(--accent)));
+  background-clip: text;
+  -webkit-background-clip: text;
+  font-weight: bold;
+}
+
+/* Estilos para tarjetas con efecto cyberpunk */
+.cyberpunk-card {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.cyberpunk-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background: linear-gradient(90deg, hsl(var(--primary)), hsl(var(--secondary)));
+  z-index: 1;
+}
+
+/* Estilos para botones con efecto cyberpunk */
+.cyberpunk-button {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  background-image: linear-gradient(to right, hsl(var(--background)), hsl(var(--background))),
+    linear-gradient(90deg, hsl(var(--primary)), hsl(var(--secondary)));
+  color: hsl(var(--foreground)) !important; /* Forzar color de texto para mejor visibilidad */
+}
+
+/* Botones primarios y secundarios con mejor contraste */
+.cyberpunk-button.bg-primary {
+  color: hsl(var(--primary-foreground)) !important;
+}
+
+.cyberpunk-button.bg-secondary {
+  color: hsl(var(--secondary-foreground)) !important;
+}
+
+/* Botones outline con mejor contraste */
+.cyberpunk-button[data-variant="outline"] {
+  color: hsl(var(--foreground)) !important;
+}
+
+.cyberpunk-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(255, 42, 109, 0.2);
+}
+
+.dark .cyberpunk-button:hover {
+  box-shadow: 0 5px 15px rgba(255, 42, 109, 0.4);
+}
+
+/* Estilos para inputs con efecto cyberpunk */
+.cyberpunk-input {
+  border: 1px solid hsl(var(--border));
+  transition: all 0.3s ease;
+}
+
+.cyberpunk-input:focus {
+  border-color: hsl(var(--primary));
+  box-shadow: 0 0 0 2px rgba(255, 42, 109, 0.2);
+}
+
+.dark .cyberpunk-input:focus {
+  box-shadow: 0 0 0 2px rgba(255, 42, 109, 0.4);
+}
+
+/* Estilos para scanlines (efecto CRT) - solo visible en modo oscuro */
+.scanlines {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.05) 50%);
+  background-size: 100% 4px;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.dark .scanlines {
+  opacity: 0.1;
+}
+
+/* Mejoras para botones estándar */
+.btn-primary {
+  @apply bg-primary text-primary-foreground hover:bg-primary/90;
+}
+
+.btn-secondary {
+  @apply bg-secondary text-secondary-foreground hover:bg-secondary/90;
+}
+
+.btn-outline {
+  @apply border border-input bg-background hover:bg-accent hover:text-accent-foreground;
+}
+
+/* Mejoras específicas para botones en modo claro */
+:root .btn-primary {
+  color: white !important;
+}
+
+:root .btn-secondary {
+  color: white !important;
+}
+
+/* Mejoras específicas para botones en modo oscuro */
+.dark .btn-primary {
+  color: black !important;
+}
+
+.dark .btn-secondary {
+  color: black !important;
+}
