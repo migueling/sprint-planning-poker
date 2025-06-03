@@ -1,0 +1,147 @@
+{
+  "common": {
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "add": "Añadir",
+    "close": "Cerrar",
+    "back": "Volver",
+    "next": "Siguiente",
+    "yes": "Sí",
+    "no": "No",
+    "or": "o"
+  },
+  "theme": {
+    "light": "Claro",
+    "dark": "Oscuro",
+    "system": "Sistema"
+  },
+  "language": {
+    "en": "English",
+    "es": "Español",
+    "switchTo": "Cambiar a {{language}}"
+  },
+  "header": {
+    "title": "Sprint Planning Poker"
+  },
+  "footer": {
+    "copyright": "© {{year}} Sprint Planning Poker. Todos los derechos reservados."
+  },
+  "home": {
+    "title": "Planificación de Sprint",
+    "subtitle": "Estima historias de usuario con tu equipo",
+    "createSession": "Crear sesión",
+    "joinSession": "Unirse a sesión",
+    "sessionId": "ID de sesión",
+    "yourName": "Tu nombre",
+    "role": "Rol",
+    "roles": {
+      "productOwner": "Product Owner",
+      "developer": "Desarrollador",
+      "observer": "Observador"
+    },
+    "join": "Unirse",
+    "create": "Crear"
+  },
+  "session": {
+    "header": {
+      "sessionId": "ID de sesión: {{id}}",
+      "copyToClipboard": "Copiar al portapapeles",
+      "copied": "¡Copiado!",
+      "expiresIn": "Expira en {{time}}",
+      "expired": "Expirada"
+    },
+    "tabs": {
+      "vote": "Votar",
+      "participants": "Participantes",
+      "results": "Resultados",
+      "manage": "Gestionar"
+    },
+    "userInfo": {
+      "name": "Nombre: {{name}}",
+      "role": "Rol: {{role}}",
+      "roles": {
+        "productOwner": "Product Owner",
+        "developer": "Desarrollador",
+        "observer": "Observador"
+      }
+    },
+    "noStories": {
+      "title": "No hay historias de usuario",
+      "description": "No hay historias de usuario para votar en esta sesión.",
+      "addStory": "Añadir historia",
+      "goToManage": "Ir a gestionar"
+    },
+    "currentStory": {
+      "title": "Historia actual",
+      "storyCount": "Historia {{current}} de {{total}}",
+      "previous": "Anterior",
+      "next": "Siguiente"
+    },
+    "votingCards": {
+      "title": "Selecciona tu estimación",
+      "help": "Ayuda",
+      "voted": "Has votado: {{value}}"
+    },
+    "help": {
+      "title": "Guía de estimación",
+      "description": "La secuencia de Fibonacci se utiliza comúnmente en la estimación ágil porque refleja la incertidumbre inherente a las estimaciones: cuanto mayor es la estimación, mayor es la incertidumbre.",
+      "values": {
+        "0": "Tarea trivial o ya completada",
+        "1": "Muy simple, bien definida y sin riesgos",
+        "2": "Simple, bien entendida",
+        "3": "Moderada, con algunos detalles por definir",
+        "5": "Significativa, con cierta complejidad",
+        "8": "Compleja, requiere investigación",
+        "13": "Muy compleja, alta incertidumbre"
+      },
+      "tips": [
+        "Estima la complejidad relativa, no el tiempo",
+        "Considera factores como riesgo, complejidad e incertidumbre",
+        "Si una historia es mayor de 13, considera dividirla",
+        "Busca el consenso del equipo, no el promedio"
+      ],
+      "close": "Cerrar"
+    },
+    "participants": {
+      "title": "Participantes",
+      "votedCount": "{{voted}} de {{total}} han votado",
+      "allVoted": "¡Todos han votado!",
+      "waiting": "Esperando votos...",
+      "voted": "Votado",
+      "notVoted": "No ha votado"
+    },
+    "results": {
+      "title": "Resultados",
+      "average": "Promedio: {{value}}",
+      "consensus": "¡Consenso! Todos votaron {{value}}",
+      "showVotes": "Mostrar votos",
+      "hideVotes": "Ocultar votos",
+      "resetVotes": "Reiniciar votos",
+      "confirmReset": "¿Estás seguro de que quieres reiniciar todos los votos?"
+    },
+    "manage": {
+      "title": "Gestionar historias",
+      "addStory": "Añadir historia",
+      "storyTitle": "Título de la historia",
+      "add": "Añadir",
+      "noStories": "No hay historias de usuario",
+      "deleteStory": "Eliminar historia",
+      "confirmDelete": "¿Estás seguro de que quieres eliminar esta historia?",
+      "setActive": "Establecer como activa"
+    },
+    "notifications": {
+      "storyAdded": "Historia añadida",
+      "storyDeleted": "Historia eliminada",
+      "storyActivated": "Historia activada",
+      "votesReset": "Votos reiniciados",
+      "voted": "Voto registrado",
+      "copied": "Copiado al portapapeles",
+      "error": "Error: {{message}}"
+    }
+  }
+}

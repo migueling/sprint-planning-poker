@@ -1,0 +1,147 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "yes": "Yes",
+    "no": "No",
+    "or": "or"
+  },
+  "theme": {
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
+  "language": {
+    "en": "English",
+    "es": "Español",
+    "switchTo": "Switch to {{language}}"
+  },
+  "header": {
+    "title": "Sprint Planning Poker"
+  },
+  "footer": {
+    "copyright": "© {{year}} Sprint Planning Poker. All rights reserved."
+  },
+  "home": {
+    "title": "Sprint Planning",
+    "subtitle": "Estimate user stories with your team",
+    "createSession": "Create session",
+    "joinSession": "Join session",
+    "sessionId": "Session ID",
+    "yourName": "Your name",
+    "role": "Role",
+    "roles": {
+      "productOwner": "Product Owner",
+      "developer": "Developer",
+      "observer": "Observer"
+    },
+    "join": "Join",
+    "create": "Create"
+  },
+  "session": {
+    "header": {
+      "sessionId": "Session ID: {{id}}",
+      "copyToClipboard": "Copy to clipboard",
+      "copied": "Copied!",
+      "expiresIn": "Expires in {{time}}",
+      "expired": "Expired"
+    },
+    "tabs": {
+      "vote": "Vote",
+      "participants": "Participants",
+      "results": "Results",
+      "manage": "Manage"
+    },
+    "userInfo": {
+      "name": "Name: {{name}}",
+      "role": "Role: {{role}}",
+      "roles": {
+        "productOwner": "Product Owner",
+        "developer": "Developer",
+        "observer": "Observer"
+      }
+    },
+    "noStories": {
+      "title": "No user stories",
+      "description": "There are no user stories to vote on in this session.",
+      "addStory": "Add story",
+      "goToManage": "Go to manage"
+    },
+    "currentStory": {
+      "title": "Current story",
+      "storyCount": "Story {{current}} of {{total}}",
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "votingCards": {
+      "title": "Select your estimate",
+      "help": "Help",
+      "voted": "You voted: {{value}}"
+    },
+    "help": {
+      "title": "Estimation Guide",
+      "description": "The Fibonacci sequence is commonly used in agile estimation because it reflects the inherent uncertainty in estimates: the larger the estimate, the greater the uncertainty.",
+      "values": {
+        "0": "Trivial task or already completed",
+        "1": "Very simple, well-defined, and risk-free",
+        "2": "Simple, well understood",
+        "3": "Moderate, with some details to be defined",
+        "5": "Significant, with some complexity",
+        "8": "Complex, requires investigation",
+        "13": "Very complex, high uncertainty"
+      },
+      "tips": [
+        "Estimate relative complexity, not time",
+        "Consider factors like risk, complexity, and uncertainty",
+        "If a story is larger than 13, consider splitting it",
+        "Look for team consensus, not average"
+      ],
+      "close": "Close"
+    },
+    "participants": {
+      "title": "Participants",
+      "votedCount": "{{voted}} of {{total}} have voted",
+      "allVoted": "Everyone has voted!",
+      "waiting": "Waiting for votes...",
+      "voted": "Voted",
+      "notVoted": "Not voted"
+    },
+    "results": {
+      "title": "Results",
+      "average": "Average: {{value}}",
+      "consensus": "Consensus! Everyone voted {{value}}",
+      "showVotes": "Show votes",
+      "hideVotes": "Hide votes",
+      "resetVotes": "Reset votes",
+      "confirmReset": "Are you sure you want to reset all votes?"
+    },
+    "manage": {
+      "title": "Manage stories",
+      "addStory": "Add story",
+      "storyTitle": "Story title",
+      "add": "Add",
+      "noStories": "No user stories",
+      "deleteStory": "Delete story",
+      "confirmDelete": "Are you sure you want to delete this story?",
+      "setActive": "Set as active"
+    },
+    "notifications": {
+      "storyAdded": "Story added",
+      "storyDeleted": "Story deleted",
+      "storyActivated": "Story activated",
+      "votesReset": "Votes reset",
+      "voted": "Vote recorded",
+      "copied": "Copied to clipboard",
+      "error": "Error: {{message}}"
+    }
+  }
+}

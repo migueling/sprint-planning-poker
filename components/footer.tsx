@@ -1,15 +1,15 @@
-import { Heart } from "lucide-react"
+"use client"
+
+import { useI18n } from "@/lib/i18n"
 
 export function Footer() {
+  const { t } = useI18n()
+  const year = new Date().getFullYear()
+
   return (
-    <footer className="w-full border-t bg-background py-3">
-      <div className="gradient-header py-1 mb-2">
-        <div className="container h-1"></div>
-      </div>
-      <div className="container flex items-center justify-center text-sm text-muted-foreground">
-        <p className="flex items-center gap-1">
-          Creado por Mike con <Heart className="h-3 w-3 fill-primary text-primary" /> con v0
-        </p>
+    <footer className="border-t py-6 md:py-0">
+      <div className="container flex flex-col items-center justify-between gap-4 md:h-14 md:flex-row">
+        <p className="text-sm text-muted-foreground">{t("footer.copyright", { year: year.toString() })}</p>
       </div>
     </footer>
   )
