@@ -9,6 +9,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
+import { useI18n } from "@/lib/i18n"
 
 interface HelpModalProps {
   open: boolean
@@ -16,46 +17,42 @@ interface HelpModalProps {
 }
 
 export function HelpModal({ open, onOpenChange }: HelpModalProps) {
+  const { t } = useI18n()
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-xl">Guía de Estimación</DialogTitle>
-          <DialogDescription>
-            En Planning Poker, usamos la secuencia de Fibonacci para estimar el esfuerzo relativo de las historias de
-            usuario.
-          </DialogDescription>
+          <DialogTitle className="text-xl">{t("session.help.title")}</DialogTitle>
+          <DialogDescription>{t("session.help.description")}</DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4 my-4">
           <div className="space-y-2">
             <h3 className="font-semibold text-primary">¿Por qué Fibonacci?</h3>
-            <p className="text-sm text-muted-foreground">
-              La secuencia de Fibonacci (1, 2, 3, 5, 8, 13) refleja la incertidumbre inherente en las estimaciones:
-              cuanto mayor es la estimación, mayor es la incertidumbre.
-            </p>
+            <p className="text-sm text-muted-foreground">{t("session.help.description")}</p>
           </div>
 
           <div className="space-y-2">
             <h3 className="font-semibold text-primary">Significado de los valores</h3>
             <div className="grid gap-2">
               <div className="p-2 border rounded-md">
-                <span className="font-bold">1</span>: Tarea muy simple, bien entendida y de rápida implementación.
+                <span className="font-bold">1</span>: {t("session.help.values.1")}
               </div>
               <div className="p-2 border rounded-md">
-                <span className="font-bold">2</span>: Tarea simple con pocos detalles a resolver.
+                <span className="font-bold">2</span>: {t("session.help.values.2")}
               </div>
               <div className="p-2 border rounded-md">
-                <span className="font-bold">3</span>: Tarea de complejidad baja-media, con camino claro.
+                <span className="font-bold">3</span>: {t("session.help.values.3")}
               </div>
               <div className="p-2 border rounded-md">
-                <span className="font-bold">5</span>: Tarea de complejidad media, puede requerir investigación.
+                <span className="font-bold">5</span>: {t("session.help.values.5")}
               </div>
               <div className="p-2 border rounded-md">
-                <span className="font-bold">8</span>: Tarea compleja con varios componentes o incertidumbres.
+                <span className="font-bold">8</span>: {t("session.help.values.8")}
               </div>
               <div className="p-2 border rounded-md">
-                <span className="font-bold">13</span>: Tarea muy compleja, posiblemente debería dividirse en subtareas.
+                <span className="font-bold">13</span>: {t("session.help.values.13")}
               </div>
             </div>
           </div>
@@ -63,16 +60,15 @@ export function HelpModal({ open, onOpenChange }: HelpModalProps) {
           <div className="space-y-2">
             <h3 className="font-semibold text-primary">Consejos para estimar</h3>
             <ul className="text-sm text-muted-foreground list-disc pl-5 space-y-1">
-              <li>Estima en términos de complejidad y esfuerzo, no en tiempo.</li>
-              <li>Compara con otras historias ya estimadas como referencia.</li>
-              <li>Si una historia parece mayor que 13, considera dividirla.</li>
-              <li>El consenso del equipo es más importante que la precisión absoluta.</li>
+              {(t("session.help.tips") as unknown as string[]).map((tip, index) => (
+                <li key={index}>{tip}</li>
+              ))}
             </ul>
           </div>
         </div>
 
         <DialogFooter>
-          <Button onClick={() => onOpenChange(false)}>Entendido</Button>
+          <Button onClick={() => onOpenChange(false)}>{t("session.help.close")}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

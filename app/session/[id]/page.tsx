@@ -17,9 +17,11 @@ import { ParticipantsList } from "../components/participants-list"
 import { ResultsPanel } from "../components/results-panel"
 import { ManageStoriesTab } from "../components/manage-stories-tab"
 import { Confetti } from "@/components/confetti"
+import { useI18n } from "@/lib/i18n"
 
 export default function SessionPage({ params }: { params: { id: string } }) {
   const router = useRouter()
+  const { t } = useI18n()
   const {
     sessionState,
     currentUser,
@@ -68,8 +70,8 @@ export default function SessionPage({ params }: { params: { id: string } }) {
     return (
       <div className="flex min-h-[calc(100vh-7.5rem)] items-center justify-center">
         <div className="text-center">
-          <h2 className="text-xl font-semibold mb-2 neon-text">Cargando...</h2>
-          <p className="text-muted-foreground">Inicializando la sesión de Planning Poker</p>
+          <h2 className="text-xl font-semibold mb-2 neon-text">{t("common.loading")}</h2>
+          <p className="text-muted-foreground">{t("session.loading.initializing")}</p>
         </div>
       </div>
     )
@@ -80,12 +82,12 @@ export default function SessionPage({ params }: { params: { id: string } }) {
       <div className="flex min-h-[calc(100vh-7.5rem)] items-center justify-center p-4">
         <Card className="w-full max-w-md border-2 border-destructive/20 shadow-lg">
           <CardHeader>
-            <CardTitle className="text-xl text-destructive">Sesión no encontrada</CardTitle>
-            <CardDescription>La sesión que intentas acceder no existe o ha sido eliminada</CardDescription>
+            <CardTitle className="text-xl text-destructive">{t("session.notifications.sessionNotFound")}</CardTitle>
+            <CardDescription>{t("session.notifications.sessionNotFoundDescription")}</CardDescription>
           </CardHeader>
           <CardFooter>
             <Button className="w-full" onClick={() => router.push("/")}>
-              Volver al inicio
+              {t("common.back")}
             </Button>
           </CardFooter>
         </Card>
@@ -116,13 +118,13 @@ export default function SessionPage({ params }: { params: { id: string } }) {
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
           <div>
-            <h1 className="text-2xl font-bold glitch-text">Sprint Planning Poker</h1>
+            <h1 className="text-2xl font-bold glitch-text">{t("header.title")}</h1>
             <UserInfo currentUser={currentUser} />
           </div>
           {currentUser.isOwner && (
             <TabsList className="w-full sm:w-auto">
-              <TabsTrigger value="main">Votación</TabsTrigger>
-              <TabsTrigger value="manage">Gestionar</TabsTrigger>
+              <TabsTrigger value="main">{t("session.tabs.vote")}</TabsTrigger>
+              <TabsTrigger value="manage">{t("session.tabs.manage")}</TabsTrigger>
             </TabsList>
           )}
         </div>

@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
 import { Eye, Zap } from "lucide-react"
 import type { Participant } from "../../actions"
+import { useI18n } from "@/lib/i18n"
 
 interface JoinSessionFormProps {
   sessionName: string
@@ -26,6 +27,7 @@ export function JoinSessionForm({
   onJoin,
   loading,
 }: JoinSessionFormProps) {
+  const { t } = useI18n()
   const [newParticipantName, setNewParticipantName] = useState(() => localStorage.getItem("participantName") || "")
   const [isObserver, setIsObserver] = useState(() => localStorage.getItem("isObserver") === "true")
 
@@ -41,21 +43,21 @@ export function JoinSessionForm({
         <CardHeader>
           <CardTitle className="text-2xl neon-text flex items-center gap-2">
             <Zap className="h-5 w-5 text-primary" />
-            Sprint Planning Poker
+            {t("header.title")}
           </CardTitle>
           <CardDescription>
             Sesión: {sessionName} <br />
             Creada por: {sessionCreator}
             <div className="mt-2 flex items-center gap-1 text-secondary">
               <Eye className="h-4 w-4" />
-              Expira en: {timeRemaining}
+              {t("session.header.expiresIn", { time: timeRemaining })}
             </div>
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid gap-4">
             <div className="grid gap-2">
-              <Label htmlFor="name">Tu Nombre</Label>
+              <Label htmlFor="name">{t("home.yourName")}</Label>
               <Input
                 id="name"
                 placeholder="Ingresa tu nombre"
@@ -70,13 +72,13 @@ export function JoinSessionForm({
               <Switch id="observer-mode" checked={isObserver} onCheckedChange={setIsObserver} />
               <Label htmlFor="observer-mode" className="flex items-center gap-1">
                 <Eye className="h-4 w-4" />
-                Unirse como observador
+                Unirse como {t("home.roles.observer")}
               </Label>
             </div>
 
             {isObserver && (
               <div className="text-sm text-muted-foreground bg-secondary/10 p-2 rounded-md">
-                Como observador, podrás ver los resultados pero no participarás en la votación.
+                Como {t("home.roles.observer")}, podrás ver los resultados pero no participarás en la votación.
               </div>
             )}
 
@@ -107,7 +109,11 @@ export function JoinSessionForm({
             onClick={handleJoin}
             disabled={loading || !newParticipantName.trim()}
           >
-            {loading ? "Uniéndose..." : isObserver ? "Unirse como Observador" : "Unirse a la Sesión"}
+            {loading
+              ? t("common.loading")
+              : isObserver
+                ? `${t("home.join")} como ${t("home.roles.observer")}`
+                : t("home.join")}
           </Button>
         </CardFooter>
       </Card>

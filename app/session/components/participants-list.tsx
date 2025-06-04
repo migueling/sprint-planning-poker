@@ -16,6 +16,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import type { Participant } from "../../actions"
+import { useI18n } from "@/lib/i18n"
 
 interface ParticipantsListProps {
   participants: Participant[]
@@ -34,6 +35,7 @@ export function ParticipantsList({
   onRemoveParticipant,
   loading,
 }: ParticipantsListProps) {
+  const { t } = useI18n()
   const [participantToRemove, setParticipantToRemove] = useState<Participant | null>(null)
 
   const handleRemove = (participant: Participant) => {
@@ -49,14 +51,18 @@ export function ParticipantsList({
 
   // Verificar si todos los participantes no observadores han votado
   const allParticipantsVoted = participants.filter((p) => !p.isObserver).every((p) => p.vote !== null)
+  const votedCount = participants.filter((p) => p.vote !== null && !p.isObserver).length
+  const totalVoters = participants.filter((p) => !p.isObserver).length
 
   return (
     <Card className="cyberpunk-card">
       <CardHeader>
-        <CardTitle className="text-lg">Participantes</CardTitle>
+        <CardTitle className="text-lg">{t("session.participants.title")}</CardTitle>
         <CardDescription>
-          {participants.filter((p) => p.vote !== null && !p.isObserver).length} de{" "}
-          {participants.filter((p) => !p.isObserver).length} han votado
+          {t("session.participants.votedCount", {
+            voted: votedCount.toString(),
+            total: totalVoters.toString(),
+          })}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -71,12 +77,12 @@ export function ParticipantsList({
                 )}
                 {participant.isObserver && (
                   <span className="ml-2 text-xs bg-secondary/10 text-secondary px-2 py-0.5 rounded-full flex items-center">
-                    <Eye className="h-3 w-3 mr-1" /> Observador
+                    <Eye className="h-3 w-3 mr-1" /> {t("home.roles.observer")}
                   </span>
                 )}
                 {participant.isOwner && (
                   <span className="ml-2 text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full flex items-center">
-                    <Users className="h-3 w-3 mr-1" /> Product Owner
+                    <Users className="h-3 w-3 mr-1" /> {t("home.roles.productOwner")}
                   </span>
                 )}
               </div>
@@ -91,17 +97,17 @@ export function ParticipantsList({
                           participant.vote
                         ) : (
                           <span className="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full dark:bg-amber-900 dark:text-amber-100">
-                            Pendiente
+                            {t("session.participants.notVoted")}
                           </span>
                         )}
                       </span>
                     ) : participant.vote !== null ? (
                       <span className="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded-full dark:bg-green-900 dark:text-green-100">
-                        Votado
+                        {t("session.participants.voted")}
                       </span>
                     ) : (
                       <span className="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full dark:bg-amber-900 dark:text-amber-100">
-                        Pendiente
+                        {t("session.participants.notVoted")}
                       </span>
                     )}
                   </>
@@ -118,12 +124,12 @@ export function ParticipantsList({
                         disabled={loading}
                       >
                         <X className="h-4 w-4 text-muted-foreground hover:text-destructive" />
-                        <span className="sr-only">Eliminar participante</span>
+                        <span className="sr-only">{t("common.delete")}</span>
                       </Button>
                     </AlertDialogTrigger>
                     <AlertDialogContent>
                       <AlertDialogHeader>
-                        <AlertDialogTitle>¿Eliminar participante?</AlertDialogTitle>
+                        <AlertDialogTitle>{t("common.delete")} participante?</AlertDialogTitle>
                         <AlertDialogDescription>
                           ¿Estás seguro de que deseas eliminar a {participant.name} de la sesión?
                           {participant.id === currentUserId && (
@@ -134,12 +140,12 @@ export function ParticipantsList({
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
-                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                        <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
                         <AlertDialogAction
                           onClick={confirmRemove}
                           className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                         >
-                          Eliminar
+                          {t("common.delete")}
                         </AlertDialogAction>
                       </AlertDialogFooter>
                     </AlertDialogContent>

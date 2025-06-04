@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { useToast } from "@/components/ui/use-toast"
+import { useI18n } from "@/lib/i18n"
 import {
   type Participant,
   type SessionState,
@@ -19,11 +20,12 @@ import {
   removeAllUserStories,
 } from "../../actions"
 import { formatDistance } from "date-fns"
-import { es } from "date-fns/locale"
+import { es, enUS } from "date-fns/locale"
 
 export function useSession(sessionId: string) {
   const router = useRouter()
   const { toast } = useToast()
+  const { t, language } = useI18n()
   const [sessionState, setSessionState] = useState<SessionState | null>(null)
   const [currentUser, setCurrentUser] = useState<Participant | null>(null)
   const [loading, setLoading] = useState(true)
@@ -51,7 +53,7 @@ export function useSession(sessionId: string) {
         // Si la sesión ha expirado o no existe, redirigir a la página principal
         if (!state) {
           toast({
-            title: "Sesión no disponible",
+            title: t("session.notifications.error", { message: "Sesión no disponible" }),
             description: "La sesión ha expirado o no existe",
             variant: "destructive",
           })
@@ -98,8 +100,8 @@ export function useSession(sessionId: string) {
 
         // Si hay un error, probablemente la sesión no existe o ha expirado
         toast({
-          title: "Error",
-          description: "No se pudo cargar la sesión. Es posible que haya expirado.",
+          title: t("common.error"),
+          description: t("session.notifications.error", { message: "No se pudo cargar la sesión" }),
           variant: "destructive",
         })
         router.push("/")
@@ -121,7 +123,7 @@ export function useSession(sessionId: string) {
         // Si la sesión ha expirado o no existe
         if (!state) {
           toast({
-            title: "Sesión expirada",
+            title: t("session.header.expired"),
             description: "La sesión ha expirado o ha sido eliminada",
             variant: "destructive",
           })
@@ -173,7 +175,7 @@ export function useSession(sessionId: string) {
       clearInterval(intervalId)
       window.removeEventListener("beforeunload", handleBeforeUnload)
     }
-  }, [currentUser, sessionId, router, toast])
+  }, [currentUser, sessionId, router, toast, t])
 
   // Efecto para mostrar confeti cuando hay consenso total
   useEffect(() => {
@@ -194,8 +196,8 @@ export function useSession(sessionId: string) {
 
       // Mostrar un toast celebrando el consenso
       toast({
-        title: "¡Consenso total! 🎉",
-        description: `Todos han votado ${consensus.value}`,
+        title: t("session.results.consensus", { value: consensus.value.toString() }),
+        description: `¡Todos han votado ${consensus.value}!`,
         duration: 5000,
       })
 
@@ -204,7 +206,7 @@ export function useSession(sessionId: string) {
         setShowFireworks(false)
       }, 4000)
     }
-  }, [sessionState, lastConsensus, toast])
+  }, [sessionState, lastConsensus, toast, t])
 
   const handleJoin = async (name: string, isObserver: boolean) => {
     if (!name || !name.trim()) {
@@ -224,8 +226,8 @@ export function useSession(sessionId: string) {
     } catch (error) {
       console.error("Error joining session:", error)
       toast({
-        title: "Error",
-        description: "No se pudo unir a la sesión. Es posible que haya expirado.",
+        title: t("common.error"),
+        description: t("session.notifications.error", { message: "No se pudo unir a la sesión" }),
         variant: "destructive",
       })
     } finally {
@@ -242,8 +244,8 @@ export function useSession(sessionId: string) {
 
       if (!updatedState) {
         toast({
-          title: "Error",
-          description: "No se pudo registrar el voto. La sesión puede haber expirado.",
+          title: t("common.error"),
+          description: t("session.notifications.error", { message: "No se pudo registrar el voto" }),
           variant: "destructive",
         })
         return
@@ -256,6 +258,11 @@ export function useSession(sessionId: string) {
       if (updatedCurrentUser) {
         setCurrentUser(updatedCurrentUser)
       }
+
+      toast({
+        title: t("session.notifications.voted"),
+        description: `Voto registrado: ${value}`,
+      })
     } catch (error) {
       console.error("Error registering vote:", error)
     } finally {
@@ -270,8 +277,8 @@ export function useSession(sessionId: string) {
 
       if (!updatedState) {
         toast({
-          title: "Error",
-          description: "No se pudieron resetear los votos. La sesión puede haber expirado.",
+          title: t("common.error"),
+          description: t("session.notifications.error", { message: "No se pudieron resetear los votos" }),
           variant: "destructive",
         })
         return
@@ -287,6 +294,11 @@ export function useSession(sessionId: string) {
           setCurrentUser(updatedCurrentUser)
         }
       }
+
+      toast({
+        title: t("session.notifications.votesReset"),
+        description: "Todos los votos han sido reiniciados",
+      })
     } catch (error) {
       console.error("Error resetting votes:", error)
     } finally {
@@ -302,8 +314,8 @@ export function useSession(sessionId: string) {
 
         if (!updatedState) {
           toast({
-            title: "Error",
-            description: "No se pudo añadir la historia. La sesión puede haber expirado.",
+            title: t("common.error"),
+            description: t("session.notifications.error", { message: "No se pudo añadir la historia" }),
             variant: "destructive",
           })
           return
@@ -311,6 +323,11 @@ export function useSession(sessionId: string) {
 
         setSessionState(updatedState)
         setLastConsensus(null) // Resetear el último consenso al cambiar de historia
+
+        toast({
+          title: t("session.notifications.storyAdded"),
+          description: `Historia "${title}" añadida`,
+        })
       } catch (error) {
         console.error("Error adding new story:", error)
       } finally {
@@ -326,8 +343,8 @@ export function useSession(sessionId: string) {
 
       if (!updatedState) {
         toast({
-          title: "Error",
-          description: "No se pudo cambiar la historia. La sesión puede haber expirado.",
+          title: t("common.error"),
+          description: t("session.notifications.error", { message: "No se pudo cambiar la historia" }),
           variant: "destructive",
         })
         return
@@ -335,6 +352,11 @@ export function useSession(sessionId: string) {
 
       setSessionState(updatedState)
       setLastConsensus(null) // Resetear el último consenso al cambiar de historia
+
+      toast({
+        title: t("session.notifications.storyActivated"),
+        description: "Historia activada",
+      })
     } catch (error) {
       console.error("Error changing story:", error)
     } finally {
@@ -349,8 +371,8 @@ export function useSession(sessionId: string) {
 
       if (!updatedState) {
         toast({
-          title: "Error",
-          description: "No se pudo eliminar al participante. La sesión puede haber expirado.",
+          title: t("common.error"),
+          description: t("session.notifications.error", { message: "No se pudo eliminar al participante" }),
           variant: "destructive",
         })
         return
@@ -371,8 +393,8 @@ export function useSession(sessionId: string) {
 
       if (!updatedState) {
         toast({
-          title: "Error",
-          description: "No se pudo eliminar la historia. La sesión puede haber expirado.",
+          title: t("common.error"),
+          description: t("session.notifications.error", { message: "No se pudo eliminar la historia" }),
           variant: "destructive",
         })
         return
@@ -380,6 +402,11 @@ export function useSession(sessionId: string) {
 
       setSessionState(updatedState)
       setLastConsensus(null) // Resetear el último consenso al eliminar una historia
+
+      toast({
+        title: t("session.notifications.storyDeleted"),
+        description: "Historia eliminada",
+      })
     } catch (error) {
       console.error("Error removing story:", error)
     } finally {
@@ -394,8 +421,8 @@ export function useSession(sessionId: string) {
 
       if (!updatedState) {
         toast({
-          title: "Error",
-          description: "No se pudieron eliminar las historias. La sesión puede haber expirado.",
+          title: t("common.error"),
+          description: t("session.notifications.error", { message: "No se pudieron eliminar las historias" }),
           variant: "destructive",
         })
         return
@@ -412,14 +439,15 @@ export function useSession(sessionId: string) {
 
   // Función para formatear el tiempo restante
   const formatTimeRemaining = (expiresAt: number) => {
-    if (!expiresAt) return "Desconocido"
+    if (!expiresAt) return t("session.header.expired")
 
     if (expiresAt <= now) {
-      return "Expirada"
+      return t("session.header.expired")
     }
 
+    const locale = language === "en" ? enUS : es
     return formatDistance(expiresAt, now, {
-      locale: es,
+      locale,
       addSuffix: false,
     })
   }

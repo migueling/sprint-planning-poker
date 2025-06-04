@@ -3,6 +3,7 @@
 import { AlertTriangle } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { useI18n } from "@/lib/i18n"
 
 interface NoStoriesMessageProps {
   isOwner: boolean
@@ -10,14 +11,16 @@ interface NoStoriesMessageProps {
 }
 
 export function NoStoriesMessage({ isOwner, onNavigateToManage }: NoStoriesMessageProps) {
+  const { t } = useI18n()
+
   return (
     <Card className="cyberpunk-card">
       <CardHeader>
-        <CardTitle>No hay historias disponibles</CardTitle>
+        <CardTitle>{t("session.noStories.title")}</CardTitle>
         <CardDescription>
           {isOwner
-            ? "Como Product Owner, puedes crear una nueva historia para comenzar la votación."
-            : "El Product Owner aún no ha creado ninguna historia para votar."}
+            ? `Como ${t("home.roles.productOwner")}, puedes crear una nueva historia para comenzar la votación.`
+            : `El ${t("home.roles.productOwner")} aún no ha creado ninguna historia para votar.`}
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col items-center justify-center py-8">
@@ -26,12 +29,12 @@ export function NoStoriesMessage({ isOwner, onNavigateToManage }: NoStoriesMessa
           <p className="text-muted-foreground">
             {isOwner
               ? "Para comenzar, crea una historia de usuario en la pestaña de Gestión."
-              : "Espera a que el Product Owner cree una historia para comenzar la votación."}
+              : `Espera a que el ${t("home.roles.productOwner")} cree una historia para comenzar la votación.`}
           </p>
         </div>
         {isOwner && onNavigateToManage && (
           <Button onClick={onNavigateToManage} className="btn-primary">
-            Ir a Gestión para crear historias
+            {t("session.noStories.goToManage")}
           </Button>
         )}
       </CardContent>

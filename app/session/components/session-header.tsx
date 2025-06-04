@@ -4,6 +4,7 @@ import { Timer, Share2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
 import { useToast } from "@/components/ui/use-toast"
+import { useI18n } from "@/lib/i18n"
 
 interface SessionHeaderProps {
   timeRemaining: string
@@ -12,6 +13,7 @@ interface SessionHeaderProps {
 
 export function SessionHeader({ timeRemaining, isExpiringSoon }: SessionHeaderProps) {
   const { toast } = useToast()
+  const { t } = useI18n()
   const [shareSuccess, setShareSuccess] = useState(false)
 
   const handleShareSession = () => {
@@ -24,14 +26,14 @@ export function SessionHeader({ timeRemaining, isExpiringSoon }: SessionHeaderPr
       setTimeout(() => setShareSuccess(false), 2000)
 
       toast({
-        title: "Enlace copiado",
-        description: "El enlace de la sesión ha sido copiado al portapapeles",
+        title: t("session.notifications.copied"),
+        description: t("session.notifications.copiedDescription"),
         duration: 3000,
       })
     } catch (error) {
       console.error("Error al copiar el enlace:", error)
       toast({
-        title: "Error",
+        title: t("common.error"),
         description: "No se pudo copiar el enlace. Intenta nuevamente.",
         variant: "destructive",
       })
@@ -43,7 +45,9 @@ export function SessionHeader({ timeRemaining, isExpiringSoon }: SessionHeaderPr
       <div className={`flex items-center gap-2 ${isExpiringSoon ? "text-destructive" : "text-secondary"}`}>
         <Timer className="h-4 w-4" />
         <span>
-          {isExpiringSoon ? `¡Atención! La sesión expira en ${timeRemaining}` : `La sesión expira en ${timeRemaining}`}
+          {isExpiringSoon
+            ? t("session.header.expiresInWarning", { time: timeRemaining })
+            : t("session.header.expiresIn", { time: timeRemaining })}
         </span>
       </div>
 
@@ -58,7 +62,7 @@ export function SessionHeader({ timeRemaining, isExpiringSoon }: SessionHeaderPr
           onClick={handleShareSession}
         >
           <Share2 className={`h-4 w-4 ${shareSuccess ? "animate-pulse" : ""}`} />
-          {shareSuccess ? "¡Enlace copiado!" : "Compartir sesión"}
+          {shareSuccess ? t("session.header.copied") : t("session.header.shareSession")}
         </Button>
       </div>
     </div>

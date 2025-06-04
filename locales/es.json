@@ -32,36 +32,51 @@
     "copyright": "© {{year}} Sprint Planning Poker. Todos los derechos reservados."
   },
   "home": {
-    "title": "Planificación de Sprint",
-    "subtitle": "Estima historias de usuario con tu equipo",
-    "createSession": "Crear sesión",
-    "joinSession": "Unirse a sesión",
-    "sessionId": "ID de sesión",
-    "yourName": "Tu nombre",
+    "title": "Sprint Planning Poker",
+    "subtitle": "Herramienta para votación de historias de usuario en un Sprint",
+    "description": "Crea una sesión, comparte el enlace con tu equipo y comienza a votar. Las sesiones expiran después de 12 horas.",
+    "createSession": "Crear Nueva Sesión",
+    "joinSession": "Unirse a una Sesión",
+    "sessionId": "ID de la Sesión",
+    "sessionName": "Nombre de la Sesión",
+    "sessionNamePlaceholder": "Ej: Sprint 23 Planning",
+    "yourName": "Tu Nombre",
+    "yourNamePlaceholder": "Ej: Juan Pérez",
+    "participantNamePlaceholder": "Ej: Ana García",
+    "sessionIdPlaceholder": "Ej: abc123xyz",
     "role": "Rol",
     "roles": {
       "productOwner": "Product Owner",
       "developer": "Desarrollador",
       "observer": "Observador"
     },
-    "join": "Unirse",
-    "create": "Crear"
+    "join": "Unirse a la Sesión",
+    "create": "Crear Sesión",
+    "creating": "Creando...",
+    "joining": "Uniéndose...",
+    "joinAsObserver": "Unirse como observador",
+    "observerInfo": "Como observador, podrás ver los resultados pero no participarás en la votación.",
+    "productOwnerInfo": "Como Product Owner, serás añadido automáticamente como observador y podrás gestionar las historias de usuario. La sesión expirará automáticamente después de 12 horas.",
+    "participantsJoined": "participante(s) ya se han unido:"
   },
   "session": {
     "header": {
       "sessionId": "ID de sesión: {{id}}",
       "copyToClipboard": "Copiar al portapapeles",
-      "copied": "¡Copiado!",
-      "expiresIn": "Expira en {{time}}",
+      "copied": "¡Enlace copiado!",
+      "shareSession": "Compartir sesión",
+      "expiresIn": "La sesión expira en {{time}}",
+      "expiresInWarning": "¡Atención! La sesión expira en {{time}}",
       "expired": "Expirada"
     },
     "tabs": {
-      "vote": "Votar",
+      "vote": "Votación",
       "participants": "Participantes",
       "results": "Resultados",
       "manage": "Gestionar"
     },
     "userInfo": {
+      "connectedAs": "Conectado como:",
       "name": "Nombre: {{name}}",
       "role": "Rol: {{role}}",
       "roles": {
@@ -71,10 +86,14 @@
       }
     },
     "noStories": {
-      "title": "No hay historias de usuario",
+      "title": "No hay historias disponibles",
       "description": "No hay historias de usuario para votar en esta sesión.",
+      "ownerDescription": "Como Product Owner, puedes crear una nueva historia para comenzar la votación.",
+      "participantDescription": "El Product Owner aún no ha creado ninguna historia para votar.",
+      "ownerMessage": "Para comenzar, crea una historia de usuario en la pestaña de Gestión.",
+      "participantMessage": "Espera a que el Product Owner cree una historia para comenzar la votación.",
       "addStory": "Añadir historia",
-      "goToManage": "Ir a gestionar"
+      "goToManage": "Ir a Gestión para crear historias"
     },
     "currentStory": {
       "title": "Historia actual",
@@ -83,65 +102,107 @@
       "next": "Siguiente"
     },
     "votingCards": {
-      "title": "Selecciona tu estimación",
+      "title": "Selecciona tu estimación:",
       "help": "Ayuda",
-      "voted": "Has votado: {{value}}"
+      "voted": "Tu voto: {{value}}"
     },
     "help": {
-      "title": "Guía de estimación",
-      "description": "La secuencia de Fibonacci se utiliza comúnmente en la estimación ágil porque refleja la incertidumbre inherente a las estimaciones: cuanto mayor es la estimación, mayor es la incertidumbre.",
+      "title": "Guía de Estimación",
+      "description": "En Planning Poker, usamos la secuencia de Fibonacci para estimar el esfuerzo relativo de las historias de usuario.",
+      "whyFibonacci": "¿Por qué Fibonacci?",
+      "fibonacciExplanation": "La secuencia de Fibonacci (1, 2, 3, 5, 8, 13) refleja la incertidumbre inherente en las estimaciones: cuanto mayor es la estimación, mayor es la incertidumbre.",
+      "valuesTitle": "Significado de los valores",
       "values": {
         "0": "Tarea trivial o ya completada",
-        "1": "Muy simple, bien definida y sin riesgos",
-        "2": "Simple, bien entendida",
-        "3": "Moderada, con algunos detalles por definir",
-        "5": "Significativa, con cierta complejidad",
-        "8": "Compleja, requiere investigación",
-        "13": "Muy compleja, alta incertidumbre"
+        "1": "Tarea muy simple, bien entendida y de rápida implementación.",
+        "2": "Tarea simple con pocos detalles a resolver.",
+        "3": "Tarea de complejidad baja-media, con camino claro.",
+        "5": "Tarea de complejidad media, puede requerir investigación.",
+        "8": "Tarea compleja con varios componentes o incertidumbres.",
+        "13": "Tarea muy compleja, posiblemente debería dividirse en subtareas."
       },
+      "tipsTitle": "Consejos para estimar",
       "tips": [
-        "Estima la complejidad relativa, no el tiempo",
-        "Considera factores como riesgo, complejidad e incertidumbre",
-        "Si una historia es mayor de 13, considera dividirla",
-        "Busca el consenso del equipo, no el promedio"
+        "Estima en términos de complejidad y esfuerzo, no en tiempo.",
+        "Compara con otras historias ya estimadas como referencia.",
+        "Si una historia parece mayor que 13, considera dividirla.",
+        "El consenso del equipo es más importante que la precisión absoluta."
       ],
-      "close": "Cerrar"
+      "close": "Entendido"
     },
     "participants": {
       "title": "Participantes",
       "votedCount": "{{voted}} de {{total}} han votado",
       "allVoted": "¡Todos han votado!",
-      "waiting": "Esperando votos...",
+      "waiting": "Esperando a que todos los participantes voten para mostrar los resultados",
       "voted": "Votado",
-      "notVoted": "No ha votado"
+      "notVoted": "Pendiente",
+      "you": "Tú",
+      "removeParticipant": "¿Eliminar participante?",
+      "removeParticipantConfirm": "¿Estás seguro de que deseas eliminar a {{name}} de la sesión?",
+      "removingSelf": "¡Atención! Te estás eliminando a ti mismo de la sesión."
     },
     "results": {
       "title": "Resultados",
-      "average": "Promedio: {{value}}",
-      "consensus": "¡Consenso! Todos votaron {{value}}",
+      "consensusTitle": "¡Consenso Total! 🎉",
+      "consensusDescription": "¡Todos han votado {{value}}!",
+      "resultsDescription": "Resultados de la votación actual",
+      "waitingDescription": "Los resultados se mostrarán cuando todos hayan votado",
+      "average": "Promedio",
+      "consensus": "Consenso",
       "showVotes": "Mostrar votos",
       "hideVotes": "Ocultar votos",
-      "resetVotes": "Reiniciar votos",
+      "resetVotes": "Reiniciar Votos",
       "confirmReset": "¿Estás seguro de que quieres reiniciar todos los votos?"
     },
     "manage": {
       "title": "Gestionar historias",
-      "addStory": "Añadir historia",
-      "storyTitle": "Título de la historia",
-      "add": "Añadir",
-      "noStories": "No hay historias de usuario",
-      "deleteStory": "Eliminar historia",
-      "confirmDelete": "¿Estás seguro de que quieres eliminar esta historia?",
+      "currentStory": "Historia Actual",
+      "addStory": "Añadir Nueva Historia",
+      "addStoryDescription": "Crea una nueva historia de usuario para estimar",
+      "storyTitle": "Título de la Historia",
+      "storyTitlePlaceholder": "Ingresa el título de la historia",
+      "add": "Añadir Historia",
+      "noStories": "No hay historias disponibles",
+      "noStoriesMessage": "Crea una nueva historia utilizando el formulario de abajo.",
+      "deleteStory": "Eliminar Historia Actual",
+      "confirmDelete": "¿Estás seguro de que deseas eliminar la historia",
+      "confirmDeleteEnd": "? Esta acción no se puede deshacer.",
+      "previousStory": "Historia Anterior",
+      "nextStory": "Historia Siguiente",
+      "sessionControls": "Controles de Sesión",
+      "deleteAllStories": "Eliminar Todas las Historias",
+      "confirmDeleteAll": "¿Estás seguro de que deseas eliminar todas las historias excepto la primera? Esta acción no se puede deshacer y se perderán todas las historias actuales.",
       "setActive": "Establecer como activa"
     },
     "notifications": {
       "storyAdded": "Historia añadida",
+      "storyAddedDescription": "Historia \"{{title}}\" añadida",
       "storyDeleted": "Historia eliminada",
       "storyActivated": "Historia activada",
       "votesReset": "Votos reiniciados",
+      "votesResetDescription": "Todos los votos han sido reiniciados",
       "voted": "Voto registrado",
+      "votedDescription": "Voto registrado: {{value}}",
       "copied": "Copiado al portapapeles",
-      "error": "Error: {{message}}"
+      "copiedDescription": "El enlace de la sesión ha sido copiado al portapapeles",
+      "error": "Error: {{message}}",
+      "sessionNotFound": "Sesión no encontrada",
+      "sessionNotFoundDescription": "La sesión que intentas acceder no existe o ha sido eliminada",
+      "sessionExpired": "Sesión expirada",
+      "sessionExpiredDescription": "La sesión ha expirado o ha sido eliminada",
+      "cannotLoadSession": "No se pudo cargar la sesión",
+      "cannotJoinSession": "No se pudo unir a la sesión",
+      "cannotVote": "No se pudo registrar el voto",
+      "cannotResetVotes": "No se pudieron resetear los votos",
+      "cannotAddStory": "No se pudo añadir la historia",
+      "cannotChangeStory": "No se pudo cambiar la historia",
+      "cannotDeleteStory": "No se pudo eliminar la historia",
+      "cannotDeleteAllStories": "No se pudieron eliminar las historias",
+      "cannotRemoveParticipant": "No se pudo eliminar al participante"
+    },
+    "loading": {
+      "initializing": "Inicializando la sesión de Planning Poker"
     }
   }
 }

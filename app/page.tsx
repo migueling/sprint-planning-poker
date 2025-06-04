@@ -10,12 +10,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Eye, Zap, Plus, LogIn } from "lucide-react"
 import { Switch } from "@/components/ui/switch"
 import { createSession } from "./actions"
-
-// Fibonacci sequence for voting
-const FIBONACCI_SEQUENCE = [1, 2, 3, 5, 8, 13, 21]
+import { useI18n } from "@/lib/i18n"
 
 export default function HomePage() {
   const router = useRouter()
+  const { t } = useI18n()
   const [newSessionName, setNewSessionName] = useState("")
   const [creatorName, setCreatorName] = useState("")
   const [joinSessionId, setJoinSessionId] = useState("")
@@ -80,8 +79,8 @@ export default function HomePage() {
     return (
       <div className="flex min-h-[calc(100vh-7.5rem)] items-center justify-center">
         <div className="text-center">
-          <h2 className="text-xl font-semibold mb-2 neon-text">Cargando...</h2>
-          <p className="text-muted-foreground">Inicializando la sesión de Planning Poker</p>
+          <h2 className="text-xl font-semibold mb-2 neon-text">{t("common.loading")}</h2>
+          <p className="text-muted-foreground">{t("home.subtitle")}</p>
         </div>
       </div>
     )
@@ -92,52 +91,50 @@ export default function HomePage() {
       <div className="flex flex-col items-center justify-center py-8">
         <h1 className="text-4xl font-bold glitch-text mb-2 flex items-center gap-2">
           <Zap className="h-8 w-8 text-primary" />
-          Sprint Planning Poker
+          {t("home.title")}
         </h1>
         <p className="text-muted-foreground text-center max-w-2xl mb-8">
-          Herramienta para votación de historias de usuario en un Sprint. Crea una sesión, comparte el enlace con tu
-          equipo y comienza a votar. Las sesiones expiran después de 12 horas.
+          {t("home.subtitle")}. {t("home.description")}
         </p>
 
         <Tabs defaultValue="create" className="w-full max-w-3xl">
           <TabsList className="grid grid-cols-2 mb-6">
-            <TabsTrigger value="create">Crear Nueva Sesión</TabsTrigger>
-            <TabsTrigger value="join">Unirse a una Sesión</TabsTrigger>
+            <TabsTrigger value="create">{t("home.createSession")}</TabsTrigger>
+            <TabsTrigger value="join">{t("home.joinSession")}</TabsTrigger>
           </TabsList>
 
           <TabsContent value="create">
             <Card className="cyberpunk-card">
               <CardHeader>
-                <CardTitle>Crear Nueva Sesión</CardTitle>
-                <CardDescription>Crea una nueva sesión de Planning Poker para tu equipo</CardDescription>
+                <CardTitle>{t("home.createSession")}</CardTitle>
+                <CardDescription>{t("home.subtitle")}</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="grid gap-4">
                   <div className="grid gap-2">
-                    <Label htmlFor="session-name">Nombre de la Sesión</Label>
+                    <Label htmlFor="session-name">{t("home.sessionName")}</Label>
                     <Input
                       id="session-name"
-                      placeholder="Ej: Sprint 23 Planning"
+                      placeholder={t("home.sessionNamePlaceholder")}
                       value={newSessionName}
                       onChange={(e) => setNewSessionName(e.target.value)}
                       className="cyberpunk-input"
                     />
                   </div>
                   <div className="grid gap-2">
-                    <Label htmlFor="creator-name">Tu Nombre (Product Owner)</Label>
+                    <Label htmlFor="creator-name">
+                      {t("home.yourName")} ({t("home.roles.productOwner")})
+                    </Label>
                     <Input
                       id="creator-name"
-                      placeholder="Ej: Juan Pérez"
+                      placeholder={t("home.yourNamePlaceholder")}
                       value={creatorName}
                       onChange={(e) => setCreatorName(e.target.value)}
                       className="cyberpunk-input"
                     />
                   </div>
                   <div className="text-sm text-muted-foreground bg-secondary/10 p-3 rounded-md mt-2">
-                    <p>
-                      Como Product Owner, serás añadido automáticamente como observador y podrás gestionar las historias
-                      de usuario. La sesión expirará automáticamente después de 12 horas.
-                    </p>
+                    <p>{t("home.productOwnerInfo")}</p>
                   </div>
                 </div>
               </CardContent>
@@ -147,7 +144,7 @@ export default function HomePage() {
                   onClick={handleCreateSession}
                   disabled={loading || !newSessionName.trim() || !creatorName.trim()}
                 >
-                  {loading ? "Creando..." : "Crear Sesión"}
+                  {loading ? t("common.loading") : t("home.create")}
                   <Plus className="ml-2 h-4 w-4" />
                 </Button>
               </CardFooter>
@@ -157,26 +154,26 @@ export default function HomePage() {
           <TabsContent value="join">
             <Card className="cyberpunk-card">
               <CardHeader>
-                <CardTitle>Unirse a una Sesión</CardTitle>
-                <CardDescription>Ingresa el ID de la sesión a la que quieres unirte</CardDescription>
+                <CardTitle>{t("home.joinSession")}</CardTitle>
+                <CardDescription>{t("home.subtitle")}</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="grid gap-4">
                   <div className="grid gap-2">
-                    <Label htmlFor="session-id">ID de la Sesión</Label>
+                    <Label htmlFor="session-id">{t("home.sessionId")}</Label>
                     <Input
                       id="session-id"
-                      placeholder="Ej: abc123xyz"
+                      placeholder={t("home.sessionIdPlaceholder")}
                       value={joinSessionId}
                       onChange={(e) => setJoinSessionId(e.target.value)}
                       className="cyberpunk-input"
                     />
                   </div>
                   <div className="grid gap-2">
-                    <Label htmlFor="participant-name">Tu Nombre</Label>
+                    <Label htmlFor="participant-name">{t("home.yourName")}</Label>
                     <Input
                       id="participant-name"
-                      placeholder="Ej: Ana García"
+                      placeholder={t("home.participantNamePlaceholder")}
                       value={participantName}
                       onChange={(e) => setParticipantName(e.target.value)}
                       className="cyberpunk-input"
@@ -186,9 +183,15 @@ export default function HomePage() {
                     <Switch id="observer-mode" checked={isObserver} onCheckedChange={setIsObserver} />
                     <Label htmlFor="observer-mode" className="flex items-center gap-1">
                       <Eye className="h-4 w-4" />
-                      Unirse como observador
+                      {t("home.joinAsObserver")}
                     </Label>
                   </div>
+
+                  {isObserver && (
+                    <div className="text-sm text-muted-foreground bg-secondary/10 p-2 rounded-md">
+                      {t("home.observerInfo")}
+                    </div>
+                  )}
                 </div>
               </CardContent>
               <CardFooter>
@@ -197,7 +200,7 @@ export default function HomePage() {
                   onClick={handleJoinSession}
                   disabled={loading || !joinSessionId.trim() || !participantName.trim()}
                 >
-                  Unirse a la Sesión
+                  {loading ? t("common.loading") : t("home.join")}
                   <LogIn className="ml-2 h-4 w-4" />
                 </Button>
               </CardFooter>

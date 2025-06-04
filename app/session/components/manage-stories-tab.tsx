@@ -18,6 +18,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import type { UserStory } from "../../actions"
+import { useI18n } from "@/lib/i18n"
 
 interface ManageStoriesTabProps {
   userStories: UserStory[]
@@ -40,6 +41,7 @@ export function ManageStoriesTab({
   onResetVotes,
   loading,
 }: ManageStoriesTabProps) {
+  const { t } = useI18n()
   const [newStoryTitle, setNewStoryTitle] = useState("")
   const [storyToRemove, setStoryToRemove] = useState<number | null>(null)
   const [isRemovingAllStories, setIsRemovingAllStories] = useState(false)
@@ -57,19 +59,24 @@ export function ManageStoriesTab({
     <div className="grid gap-6">
       <Card className="cyberpunk-card">
         <CardHeader>
-          <CardTitle>Historia Actual</CardTitle>
+          <CardTitle>{t("session.currentStory.title")}</CardTitle>
           <CardDescription>
             {userStories.length === 0
-              ? "No hay historias disponibles"
-              : `Historia ${activeStoryIndex + 1} de ${userStories.length}`}
+              ? t("session.manage.noStories")
+              : t("session.currentStory.storyCount", {
+                  current: (activeStoryIndex + 1).toString(),
+                  total: userStories.length.toString(),
+                })}
           </CardDescription>
         </CardHeader>
         <CardContent>
           {userStories.length === 0 ? (
             <div className="p-4 border-2 border-amber-500/20 rounded-lg bg-accent/30 text-center">
               <AlertTriangle className="h-8 w-8 text-amber-500 mx-auto mb-2" />
-              <h3 className="font-medium text-amber-500">No hay historias disponibles</h3>
-              <p className="text-muted-foreground mt-1">Crea una nueva historia utilizando el formulario de abajo.</p>
+              <h3 className="font-medium text-amber-500">{t("session.manage.noStories")}</h3>
+              <p className="text-muted-foreground mt-1">
+                {t("session.manage.addStory")} utilizando el formulario de abajo.
+              </p>
             </div>
           ) : (
             <div className="p-4 border-2 border-secondary/20 rounded-lg bg-accent/30">
@@ -85,7 +92,7 @@ export function ManageStoriesTab({
               disabled={activeStoryIndex === 0 || loading}
               onClick={() => onChangeStory(activeStoryIndex - 1)}
             >
-              Historia Anterior
+              {t("session.currentStory.previous")}
             </Button>
             <Button
               variant="outline"
@@ -93,7 +100,7 @@ export function ManageStoriesTab({
               disabled={activeStoryIndex === userStories.length - 1 || loading}
               onClick={() => onChangeStory(activeStoryIndex + 1)}
             >
-              Historia Siguiente
+              {t("session.currentStory.next")}
             </Button>
 
             <AlertDialog>
@@ -105,19 +112,18 @@ export function ManageStoriesTab({
                   onClick={() => setStoryToRemove(activeStoryIndex)}
                 >
                   <Trash2 className="h-4 w-4 mr-2" />
-                  Eliminar Historia Actual
+                  {t("session.manage.deleteStory")}
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle>¿Eliminar historia?</AlertDialogTitle>
+                  <AlertDialogTitle>{t("session.manage.deleteStory")}?</AlertDialogTitle>
                   <AlertDialogDescription>
-                    ¿Estás seguro de que deseas eliminar la historia "{activeStory?.title}"? Esta acción no se puede
-                    deshacer.
+                    {t("session.manage.confirmDelete")} "{activeStory?.title}"?
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                  <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
                   <AlertDialogAction
                     onClick={() => {
                       if (storyToRemove !== null) {
@@ -127,7 +133,7 @@ export function ManageStoriesTab({
                     }}
                     className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                   >
-                    Eliminar
+                    {t("common.delete")}
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
@@ -138,13 +144,13 @@ export function ManageStoriesTab({
 
       <Card className="cyberpunk-card">
         <CardHeader>
-          <CardTitle>Añadir Nueva Historia</CardTitle>
+          <CardTitle>{t("session.manage.addStory")}</CardTitle>
           <CardDescription>Crea una nueva historia de usuario para estimar</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid gap-4">
             <div className="grid gap-2">
-              <Label htmlFor="story-title">Título de la Historia</Label>
+              <Label htmlFor="story-title">{t("session.manage.storyTitle")}</Label>
               <Input
                 id="story-title"
                 placeholder="Ingresa el título de la historia"
@@ -158,7 +164,7 @@ export function ManageStoriesTab({
         </CardContent>
         <CardFooter>
           <Button className="w-full btn-secondary" onClick={handleAddStory} disabled={loading || !newStoryTitle.trim()}>
-            Añadir Historia
+            {t("session.manage.add")}
           </Button>
         </CardFooter>
       </Card>
@@ -170,7 +176,7 @@ export function ManageStoriesTab({
         <CardContent className="space-y-4">
           <Button variant="outline" className="w-full btn-outline" onClick={onResetVotes} disabled={loading}>
             <RefreshCw className="h-4 w-4 mr-2" />
-            Reiniciar Votos Actuales
+            {t("session.results.resetVotes")}
           </Button>
 
           <AlertDialog>
@@ -194,7 +200,7 @@ export function ManageStoriesTab({
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
                 <AlertDialogAction
                   onClick={() => {
                     onRemoveAllStories()
@@ -202,7 +208,7 @@ export function ManageStoriesTab({
                   }}
                   className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                 >
-                  Eliminar Todas
+                  {t("common.delete")}
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>

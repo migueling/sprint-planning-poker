@@ -5,6 +5,7 @@ import type React from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import type { UserStory } from "../../actions"
+import { useI18n } from "@/lib/i18n"
 
 interface CurrentStoryProps {
   story: UserStory
@@ -27,6 +28,8 @@ export function CurrentStory({
   children,
   loading,
 }: CurrentStoryProps) {
+  const { t } = useI18n()
+
   return (
     <Card className="cyberpunk-card">
       <CardHeader>
@@ -43,7 +46,7 @@ export function CurrentStory({
                 disabled={storyIndex === 0 || loading}
                 onClick={onPrevious}
               >
-                Anterior
+                {t("session.currentStory.previous")}
               </Button>
               <Button
                 variant="outline"
@@ -52,13 +55,16 @@ export function CurrentStory({
                 disabled={storyIndex === totalStories - 1 || loading}
                 onClick={onNext}
               >
-                Siguiente
+                {t("session.currentStory.next")}
               </Button>
             </div>
           )}
         </div>
         <div className="text-xs text-muted-foreground mt-1">
-          Historia {storyIndex + 1} de {totalStories}
+          {t("session.currentStory.storyCount", {
+            current: (storyIndex + 1).toString(),
+            total: totalStories.toString(),
+          })}
         </div>
       </CardHeader>
       {children && <CardContent>{children}</CardContent>}
