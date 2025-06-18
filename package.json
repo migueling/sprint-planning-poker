@@ -9,11 +9,14 @@
     "start": "next start"
   },
   "dependencies": {
+    "@radix-ui/react-alert-dialog": "latest",
     "@radix-ui/react-dialog": "^1.0.5",
     "@radix-ui/react-dropdown-menu": "^2.0.6",
+    "@radix-ui/react-label": "latest",
     "@radix-ui/react-slot": "^1.0.2",
+    "@radix-ui/react-switch": "latest",
     "@radix-ui/react-tabs": "^1.0.4",
-    "@radix-ui/react-toast": "^1.1.5",
+    "@radix-ui/react-toast": "latest",
     "@vercel/kv": "latest",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -24,8 +27,7 @@
     "next-themes": "latest",
     "react": "^18",
     "react-dom": "^18",
-    "tailwind-merge": "^2.5.5",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwind-merge": "^2.5.5"
   },
   "devDependencies": {
     "@types/node": "^22",
@@ -35,6 +37,7 @@
     "eslint-config-next": "14.2.5",
     "postcss": "^8.5",
     "tailwindcss": "^3.4.1",
+    "tailwindcss-animate": "^1.0.7",
     "typescript": "^5"
   }
 }
