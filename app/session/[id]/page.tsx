@@ -34,6 +34,7 @@ export default function SessionPage({ params }: { params: { id: string } }) {
     consensus,
     hasFullConsensus,
     activeStory,
+    allParticipantsVoted, // Nueva función exportada
     handleJoin,
     handleVote,
     handleResetVotes,
@@ -157,6 +158,7 @@ export default function SessionPage({ params }: { params: { id: string } }) {
                   currentUserId={currentUser.id}
                   isOwner={currentUser.isOwner}
                   shouldShowResults={shouldShowResults}
+                  allParticipantsVoted={allParticipantsVoted()} // Pasar la función ejecutada
                   onRemoveParticipant={handleRemoveParticipant}
                   loading={loading}
                 />

@@ -173,23 +173,33 @@ export function useSession(sessionId: string) {
 
     return () => {
       clearInterval(intervalId)
-      window.removeEventListener("beforeunload", handleBeforeUnload)
+      window.removeEventListener("beforeUnload", handleBeforeUnload)
     }
   }, [currentUser, sessionId, router, toast, t])
 
-  // Efecto para mostrar confeti cuando hay consenso total
+  // Efecto para mostrar confeti cuando hay consenso total Y todos han votado
   useEffect(() => {
     if (!sessionState) return
 
+    // Obtener participantes no observadores (los que pueden votar)
+    const activeParticipants = sessionState.participants.filter((p) => !p.isObserver)
+
+    // Verificar que hay al menos 2 participantes activos
+    if (activeParticipants.length < 2) return
+
+    // Verificar que TODOS los participantes activos han votado
+    const allParticipantsVoted = activeParticipants.every((p) => p.vote !== null)
+
+    if (!allParticipantsVoted) return
+
+    // Ahora verificar si hay consenso (todos votaron lo mismo)
     const consensus = getConsensus()
 
-    // Verificar si hay consenso total (100%) y al menos 2 participantes activos
-    if (
-      consensus &&
-      consensus.percentage === 100 &&
-      consensus.value !== lastConsensus &&
-      sessionState.participants.filter((p) => !p.isObserver && p.vote !== null).length >= 2
-    ) {
+    // Solo mostrar confeti si:
+    // 1. Todos los participantes activos han votado
+    // 2. Hay consenso total (100%)
+    // 3. Es un consenso diferente al anterior (para evitar mostrar múltiples veces)
+    if (consensus && consensus.percentage === 100 && consensus.value !== lastConsensus) {
       // Mostrar confeti
       setShowFireworks(true)
       setLastConsensus(consensus.value)
@@ -466,7 +476,10 @@ export function useSession(sessionId: string) {
     if (!sessionState) return null
 
     // Filtrar votos numéricos (excluir null y "NA")
-    const votes = sessionState.participants.map((p) => p.vote).filter((v): v is number => typeof v === "number")
+    const votes = sessionState.participants
+      .filter((p) => !p.isObserver && p.vote !== null) // Solo participantes activos que han votado
+      .map((p) => p.vote)
+      .filter((v): v is number => typeof v === "number")
 
     if (votes.length === 0) return null
 
@@ -498,12 +511,14 @@ export function useSession(sessionId: string) {
   const hasFullConsensus =
     consensus &&
     consensus.percentage === 100 &&
-    sessionState?.participants.filter((p) => !p.isObserver && p.vote !== null).length >= 2
+    allParticipantsVoted() && // Asegurar que todos han votado
+    sessionState?.participants.filter((p) => !p.isObserver).length >= 2 // Al menos 2 participantes
 
   const timeRemaining = sessionState ? formatTimeRemaining(sessionState.expiresAt) : ""
   const isExpiringSoon = sessionState && sessionState.expiresAt && sessionState.expiresAt - now < 3 * 60 * 60 * 1000 // Menos de 3 horas
-  const shouldShowResults =
-    sessionState && (sessionState.showResults || currentUser?.isObserver || allParticipantsVoted())
+
+  // CAMBIO IMPORTANTE: Ahora TODOS (incluyendo observadores y PO) deben esperar a que todos voten
+  const shouldShowResults = sessionState && allParticipantsVoted()
 
   const activeStory =
     sessionState && sessionState.userStories.length > 0 && sessionState.activeStoryIndex >= 0
@@ -515,13 +530,14 @@ export function useSession(sessionId: string) {
     currentUser,
     loading,
     isOwner,
-    showFireworks, // Mantenemos el mismo nombre para no tener que cambiar todas las referencias
+    showFireworks,
     timeRemaining,
     isExpiringSoon,
     shouldShowResults,
     consensus,
     hasFullConsensus,
     activeStory,
+    allParticipantsVoted, // Exportar esta función para usar en componentes
     handleJoin,
     handleVote,
     handleResetVotes,

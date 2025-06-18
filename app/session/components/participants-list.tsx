@@ -23,6 +23,7 @@ interface ParticipantsListProps {
   currentUserId: string
   isOwner: boolean
   shouldShowResults: boolean
+  allParticipantsVoted: boolean // Nueva prop para verificar si todos han votado
   onRemoveParticipant: (participantId: string) => void
   loading: boolean
 }
@@ -32,6 +33,7 @@ export function ParticipantsList({
   currentUserId,
   isOwner,
   shouldShowResults,
+  allParticipantsVoted, // Nueva prop
   onRemoveParticipant,
   loading,
 }: ParticipantsListProps) {
@@ -49,8 +51,6 @@ export function ParticipantsList({
     }
   }
 
-  // Verificar si todos los participantes no observadores han votado
-  const allParticipantsVoted = participants.filter((p) => !p.isObserver).every((p) => p.vote !== null)
   const votedCount = participants.filter((p) => p.vote !== null && !p.isObserver).length
   const totalVoters = participants.filter((p) => !p.isObserver).length
 
@@ -59,10 +59,12 @@ export function ParticipantsList({
       <CardHeader>
         <CardTitle className="text-lg">{t("session.participants.title")}</CardTitle>
         <CardDescription>
-          {t("session.participants.votedCount", {
-            voted: votedCount.toString(),
-            total: totalVoters.toString(),
-          })}
+          {allParticipantsVoted
+            ? t("session.participants.allVoted")
+            : t("session.participants.votedCount", {
+                voted: votedCount.toString(),
+                total: totalVoters.toString(),
+              })}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -73,7 +75,9 @@ export function ParticipantsList({
                 <UserCircle className="h-5 w-5 mr-2 text-muted-foreground" />
                 <span>{participant.name}</span>
                 {participant.id === currentUserId && (
-                  <span className="ml-2 text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full">Tú</span>
+                  <span className="ml-2 text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full">
+                    {t("session.participants.you")}
+                  </span>
                 )}
                 {participant.isObserver && (
                   <span className="ml-2 text-xs bg-secondary/10 text-secondary px-2 py-0.5 rounded-full flex items-center">
@@ -89,6 +93,7 @@ export function ParticipantsList({
               <div className="flex items-center gap-3">
                 {!participant.isObserver && (
                   <>
+                    {/* CAMBIO IMPORTANTE: Solo mostrar votos específicos si todos han votado Y se deben mostrar resultados */}
                     {shouldShowResults && allParticipantsVoted ? (
                       <span className="font-medium">
                         {participant.vote === "NA" ? (
@@ -129,12 +134,12 @@ export function ParticipantsList({
                     </AlertDialogTrigger>
                     <AlertDialogContent>
                       <AlertDialogHeader>
-                        <AlertDialogTitle>{t("common.delete")} participante?</AlertDialogTitle>
+                        <AlertDialogTitle>{t("session.participants.removeParticipant")}</AlertDialogTitle>
                         <AlertDialogDescription>
-                          ¿Estás seguro de que deseas eliminar a {participant.name} de la sesión?
+                          {t("session.participants.removeParticipantConfirm", { name: participant.name })}
                           {participant.id === currentUserId && (
                             <p className="mt-2 font-medium text-destructive">
-                              ¡Atención! Te estás eliminando a ti mismo de la sesión.
+                              {t("session.participants.removingSelf")}
                             </p>
                           )}
                         </AlertDialogDescription>
