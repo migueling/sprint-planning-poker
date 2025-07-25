@@ -16,7 +16,7 @@ import { VotingCards } from "../components/voting-cards"
 import { ParticipantsList } from "../components/participants-list"
 import { ResultsPanel } from "../components/results-panel"
 import { ManageStoriesTab } from "../components/manage-stories-tab"
-import { Confetti } from "@/components/confetti"
+import { LightningStrike } from "@/components/lightning-strike" // Importar el nuevo componente
 import { useI18n } from "@/lib/i18n"
 
 export default function SessionPage({ params }: { params: { id: string } }) {
@@ -27,14 +27,14 @@ export default function SessionPage({ params }: { params: { id: string } }) {
     currentUser,
     loading,
     isOwner,
-    showFireworks,
+    showFireworks, // Esta variable ahora controlará LightningStrike
     timeRemaining,
     isExpiringSoon,
     shouldShowResults,
     consensus,
     hasFullConsensus,
     activeStory,
-    allParticipantsVoted, // Nueva función exportada
+    allParticipantsVoted,
     handleJoin,
     handleVote,
     handleResetVotes,
@@ -46,17 +46,14 @@ export default function SessionPage({ params }: { params: { id: string } }) {
     calculateAverage,
   } = useSession(params.id)
 
-  // Estado para controlar la pestaña activa
   const [activeTab, setActiveTab] = useState<string>("main")
 
-  // Efecto para dirigir al PO a la pestaña "Gestionar" cuando se une
   useEffect(() => {
     if (currentUser && isOwner && sessionState?.userStories.length === 0) {
       setActiveTab("manage")
     }
   }, [currentUser, isOwner, sessionState?.userStories.length])
 
-  // Efecto para añadir scanlines (solo visible en modo oscuro)
   useState(() => {
     const scanlines = document.createElement("div")
     scanlines.className = "scanlines"
@@ -112,10 +109,8 @@ export default function SessionPage({ params }: { params: { id: string } }) {
   return (
     <div className="container mx-auto p-4 pb-8 max-w-6xl">
       <Toaster />
-      {showFireworks && <Confetti />}
-
+      {showFireworks && <LightningStrike />} {/* Usar LightningStrike aquí */}
       <SessionHeader timeRemaining={timeRemaining} isExpiringSoon={isExpiringSoon} />
-
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
           <div>
@@ -135,7 +130,6 @@ export default function SessionPage({ params }: { params: { id: string } }) {
             <NoStoriesMessage isOwner={currentUser.isOwner} onNavigateToManage={() => setActiveTab("manage")} />
           ) : (
             <div className="space-y-6">
-              {/* Historia actual */}
               <CurrentStory
                 story={activeStory!}
                 storyIndex={sessionState.activeStoryIndex}
@@ -150,20 +144,17 @@ export default function SessionPage({ params }: { params: { id: string } }) {
                 )}
               </CurrentStory>
 
-              {/* Sección unificada de participantes y resultados */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Lista de participantes */}
                 <ParticipantsList
                   participants={sessionState.participants}
                   currentUserId={currentUser.id}
                   isOwner={currentUser.isOwner}
                   shouldShowResults={shouldShowResults}
-                  allParticipantsVoted={allParticipantsVoted()} // Pasar la función ejecutada
+                  allParticipantsVoted={allParticipantsVoted()}
                   onRemoveParticipant={handleRemoveParticipant}
                   loading={loading}
                 />
 
-                {/* Resultados */}
                 <ResultsPanel
                   participants={sessionState.participants}
                   shouldShowResults={shouldShowResults}
