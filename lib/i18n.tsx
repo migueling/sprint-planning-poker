@@ -20,7 +20,7 @@ interface I18nProviderProps {
 }
 
 export function I18nProvider({ children }: I18nProviderProps) {
-  const [language, setLanguageState] = useState<Language>("es")
+  const [language, setLanguageState] = useState<Language>("en")
   const translations: Record<Language, Translations> = {
     es: esTranslations,
     en: enTranslations,
@@ -32,9 +32,8 @@ export function I18nProvider({ children }: I18nProviderProps) {
     if (savedLanguage && (savedLanguage === "es" || savedLanguage === "en")) {
       setLanguageState(savedLanguage)
     } else {
-      // Si no hay idioma guardado, detecta el idioma del navegador
-      const browserLanguage = navigator.language.split("-")[0]
-      setLanguageState(browserLanguage === "en" ? "en" : "es")
+      // Si no hay idioma guardado, usar inglés por defecto
+      setLanguageState("en")
     }
   }, [])
 
@@ -52,19 +51,19 @@ export function I18nProvider({ children }: I18nProviderProps) {
       if (value && typeof value === "object" && k in value) {
         value = value[k]
       } else {
-        // Si no se encuentra la clave, intenta en español como fallback
-        if (language !== "es") {
-          let fallbackValue = translations["es"]
+        // Si no se encuentra la clave, intenta en inglés como fallback
+        if (language !== "en") {
+          let fallbackValue = translations["en"]
           for (const fallbackKey of keys) {
             if (fallbackValue && typeof fallbackValue === "object" && fallbackKey in fallbackValue) {
               fallbackValue = fallbackValue[fallbackKey]
             } else {
-              return key // Si tampoco está en español, devuelve la clave
+              return key // Si tampoco está en inglés, devuelve la clave
             }
           }
           value = fallbackValue
         } else {
-          return key // Si ya estamos en español y no existe, devuelve la clave
+          return key // Si ya estamos en inglés y no existe, devuelve la clave
         }
       }
     }
