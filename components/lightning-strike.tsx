@@ -4,10 +4,10 @@ import { useEffect, useRef } from "react"
 import { useTheme } from "@/components/theme-provider"
 
 interface LightningStrikeProps {
-  duration?: number // Duración total del efecto
+  duration?: number
 }
 
-export function LightningStrike({ duration = 2000 }: LightningStrikeProps) {
+export function LightningStrike({ duration = 3000 }: LightningStrikeProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const { theme } = useTheme()
 
@@ -26,49 +26,148 @@ export function LightningStrike({ duration = 2000 }: LightningStrikeProps) {
     resizeCanvas()
     window.addEventListener("resize", resizeCanvas)
 
-    const lightningColor = theme === "dark" ? "hsl(var(--secondary))" : "hsl(var(--primary))"
-    const smokeColor = theme === "dark" ? "rgba(180, 70, 70, 0.05)" : "rgba(100, 100, 100, 0.05)" // Muted foreground with transparency
+    // Colores del rayo - amarillo brillante
+    const lightningColors = {
+      core: "#ffff00", // Amarillo puro para el núcleo
+      bright: "#fff700", // Amarillo brillante
+      glow: "#ffed4e", // Amarillo más suave para el glow
+      flash: "#ffffff", // Blanco para el flash
+    }
 
-    // --- Lightning Bolt Class ---
+    let animationId: number
+    let startTime: number
+    let lightningBolts: LightningBolt[] = []
+    let smokeParticles: SmokeParticle[] = []
+    let flashIntensity = 0
+    let impactCreated = false
+
+    // Clase para el rayo principal
+    class LightningBolt {
+      segments: LightningSegment[]
+      alpha: number
+      flashTimer: number
+      isFlashing: boolean
+
+      constructor() {
+        this.segments = []
+        this.alpha = 1
+        this.flashTimer = 0
+        this.isFlashing = true
+        this.generateBolt()
+      }
+
+      generateBolt() {
+        const startX = canvas.width / 2
+        const startY = -50
+        const endX = canvas.width / 2 + (Math.random() - 0.5) * 100
+        const endY = canvas.height * 0.85
+
+        // Crear el rayo principal con múltiples segmentos zigzagueantes
+        const numSegments = 15 + Math.floor(Math.random() * 10)
+        let currentX = startX
+        let currentY = startY
+
+        for (let i = 0; i < numSegments; i++) {
+          const progress = i / numSegments
+          const targetX = startX + (endX - startX) * progress + (Math.random() - 0.5) * 80
+          const targetY = startY + (endY - startY) * progress + (Math.random() - 0.5) * 40
+
+          this.segments.push(new LightningSegment(currentX, currentY, targetX, targetY, true))
+
+          // Crear ramas laterales ocasionalmente
+          if (Math.random() < 0.4 && i > 2) {
+            const branchLength = 30 + Math.random() * 50
+            const branchAngle = (Math.random() - 0.5) * Math.PI * 0.8
+            const branchEndX = targetX + Math.cos(branchAngle) * branchLength
+            const branchEndY = targetY + Math.sin(branchAngle) * branchLength
+
+            this.segments.push(new LightningSegment(targetX, targetY, branchEndX, branchEndY, false))
+          }
+
+          currentX = targetX
+          currentY = targetY
+        }
+      }
+
+      update() {
+        this.flashTimer += 0.1
+
+        // Efecto de flash intermitente
+        if (this.flashTimer < 1) {
+          this.isFlashing = Math.sin(this.flashTimer * 20) > 0
+        } else {
+          this.isFlashing = false
+          this.alpha -= 0.02
+        }
+
+        // Regenerar el rayo ocasionalmente para efecto de parpadeo
+        if (this.flashTimer < 0.8 && Math.random() < 0.3) {
+          this.segments = []
+          this.generateBolt()
+        }
+      }
+
+      draw() {
+        if (!ctx || this.alpha <= 0) return
+
+        this.segments.forEach((segment) => {
+          // Dibujar múltiples capas para efecto de grosor y glow
+
+          // Capa exterior (glow más amplio)
+          ctx.beginPath()
+          ctx.moveTo(segment.x1, segment.y1)
+          ctx.lineTo(segment.x2, segment.y2)
+          ctx.strokeStyle = lightningColors.glow
+          ctx.lineWidth = segment.isMain ? 12 : 8
+          ctx.globalAlpha = this.alpha * 0.3
+          ctx.shadowBlur = 25
+          ctx.shadowColor = lightningColors.glow
+          ctx.stroke()
+
+          // Capa media (brillo)
+          ctx.beginPath()
+          ctx.moveTo(segment.x1, segment.y1)
+          ctx.lineTo(segment.x2, segment.y2)
+          ctx.strokeStyle = lightningColors.bright
+          ctx.lineWidth = segment.isMain ? 6 : 4
+          ctx.globalAlpha = this.alpha * 0.7
+          ctx.shadowBlur = 15
+          ctx.shadowColor = lightningColors.bright
+          ctx.stroke()
+
+          // Núcleo (más brillante)
+          ctx.beginPath()
+          ctx.moveTo(segment.x1, segment.y1)
+          ctx.lineTo(segment.x2, segment.y2)
+          ctx.strokeStyle = this.isFlashing ? lightningColors.flash : lightningColors.core
+          ctx.lineWidth = segment.isMain ? 3 : 2
+          ctx.globalAlpha = this.alpha
+          ctx.shadowBlur = this.isFlashing ? 30 : 10
+          ctx.shadowColor = this.isFlashing ? lightningColors.flash : lightningColors.core
+          ctx.stroke()
+        })
+
+        // Reset shadow
+        ctx.shadowBlur = 0
+      }
+    }
+
     class LightningSegment {
       x1: number
       y1: number
       x2: number
       y2: number
-      alpha: number
-      children: LightningSegment[]
       isMain: boolean
 
-      constructor(x1: number, y1: number, x2: number, y2: number, isMain = true) {
+      constructor(x1: number, y1: number, x2: number, y2: number, isMain: boolean) {
         this.x1 = x1
         this.y1 = y1
         this.x2 = x2
         this.y2 = y2
-        this.alpha = 1
-        this.children = []
         this.isMain = isMain
-      }
-
-      draw() {
-        if (!ctx) return
-        ctx.beginPath()
-        ctx.moveTo(this.x1, this.y1)
-        ctx.lineTo(this.x2, this.y2)
-        ctx.strokeStyle = lightningColor
-        ctx.lineWidth = this.isMain ? 3 : 1.5
-        ctx.globalAlpha = this.alpha
-        ctx.shadowBlur = 15 // Glow effect
-        ctx.shadowColor = lightningColor
-        ctx.stroke()
-      }
-
-      update() {
-        this.alpha -= 0.05 // Fade out quickly
-        this.children.forEach((child) => child.update())
       }
     }
 
-    // --- Smoke Particle Class ---
     class SmokeParticle {
       x: number
       y: number
@@ -76,104 +175,195 @@ export function LightningStrike({ duration = 2000 }: LightningStrikeProps) {
       alpha: number
       speedX: number
       speedY: number
+      color: string
 
       constructor(x: number, y: number) {
-        this.x = x + (Math.random() - 0.5) * 20 // Spread slightly
+        this.x = x + (Math.random() - 0.5) * 60
         this.y = y
-        this.size = Math.random() * 10 + 5
-        this.alpha = Math.random() * 0.4 + 0.2 // Start with some transparency
-        this.speedX = (Math.random() - 0.5) * 1.5
-        this.speedY = -(Math.random() * 1 + 0.5) // Move upwards
+        this.size = Math.random() * 15 + 8
+        this.alpha = Math.random() * 0.6 + 0.4
+        this.speedX = (Math.random() - 0.5) * 2
+        this.speedY = -(Math.random() * 2 + 1)
+        this.color = theme === "dark" ? "rgba(200, 200, 200, 0.8)" : "rgba(100, 100, 100, 0.6)"
       }
 
       update() {
         this.x += this.speedX
         this.y += this.speedY
-        this.alpha -= 0.008 // Fade out
-        this.size += 0.1 // Grow slightly
+        this.alpha -= 0.01
+        this.size += 0.2
+        this.speedY *= 0.98 // Desaceleración gradual
       }
 
       draw() {
-        if (!ctx) return
+        if (!ctx || this.alpha <= 0) return
+
         ctx.globalAlpha = this.alpha
-        ctx.fillStyle = smokeColor
+        ctx.fillStyle = this.color
         ctx.beginPath()
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2)
         ctx.fill()
       }
     }
 
-    let lightning: LightningSegment | null = null
-    let smokeParticles: SmokeParticle[] = []
-    let animationId: number
-    let startTime: number
+    class ImpactEffect {
+      x: number
+      y: number
+      particles: ImpactParticle[]
+      shockwaveRadius: number
+      shockwaveAlpha: number
 
-    const generateLightning = () => {
-      const startX = canvas.width / 2
-      const startY = 0
-      const endY = canvas.height * 0.8 // Strike towards bottom 80%
+      constructor(x: number, y: number) {
+        this.x = x
+        this.y = y
+        this.particles = []
+        this.shockwaveRadius = 0
+        this.shockwaveAlpha = 1
 
-      const createBranch = (x1: number, y1: number, x2: number, y2: number, depth: number, isMain: boolean) => {
-        const segment = new LightningSegment(x1, y1, x2, y2, isMain)
-        if (depth < 3) {
-          const midX = (x1 + x2) / 2 + (Math.random() - 0.5) * 30
-          const midY = (y1 + y2) / 2 + (Math.random() - 0.5) * 30
-          segment.children.push(createBranch(x1, y1, midX, midY, depth + 1, isMain))
-          segment.children.push(createBranch(midX, midY, x2, y2, depth + 1, isMain))
+        // Crear partículas de impacto
+        for (let i = 0; i < 30; i++) {
+          this.particles.push(new ImpactParticle(x, y))
         }
-        if (Math.random() < 0.3 && depth < 2) {
-          // Add side branches
-          const branchX = x2 + (Math.random() - 0.5) * 50
-          const branchY = y2 + (Math.random() - 0.5) * 50
-          segment.children.push(createBranch(x2, y2, branchX, branchY, depth + 1, false))
-        }
-        return segment
       }
 
-      lightning = createBranch(startX, startY, startX + (Math.random() - 0.5) * 50, endY, 0, true)
-    }
+      update() {
+        this.shockwaveRadius += 8
+        this.shockwaveAlpha -= 0.03
 
-    const createSmoke = (impactX: number, impactY: number) => {
-      for (let i = 0; i < 50; i++) {
-        smokeParticles.push(new SmokeParticle(impactX, impactY))
+        this.particles = this.particles.filter((p) => {
+          p.update()
+          return p.alpha > 0
+        })
+      }
+
+      draw() {
+        if (!ctx) return
+
+        // Dibujar onda de choque
+        if (this.shockwaveAlpha > 0) {
+          ctx.beginPath()
+          ctx.arc(this.x, this.y, this.shockwaveRadius, 0, Math.PI * 2)
+          ctx.strokeStyle = lightningColors.glow
+          ctx.lineWidth = 3
+          ctx.globalAlpha = this.shockwaveAlpha
+          ctx.shadowBlur = 20
+          ctx.shadowColor = lightningColors.glow
+          ctx.stroke()
+          ctx.shadowBlur = 0
+        }
+
+        // Dibujar partículas de impacto
+        this.particles.forEach((p) => p.draw())
       }
     }
+
+    class ImpactParticle {
+      x: number
+      y: number
+      speedX: number
+      speedY: number
+      size: number
+      alpha: number
+      color: string
+
+      constructor(x: number, y: number) {
+        const angle = Math.random() * Math.PI * 2
+        const speed = Math.random() * 5 + 2
+        this.x = x
+        this.y = y
+        this.speedX = Math.cos(angle) * speed
+        this.speedY = Math.sin(angle) * speed - Math.random() * 2
+        this.size = Math.random() * 4 + 2
+        this.alpha = 1
+        this.color = lightningColors.bright
+      }
+
+      update() {
+        this.x += this.speedX
+        this.y += this.speedY
+        this.speedY += 0.1 // Gravedad
+        this.alpha -= 0.02
+        this.size -= 0.05
+      }
+
+      draw() {
+        if (!ctx || this.alpha <= 0 || this.size <= 0) return
+
+        ctx.globalAlpha = this.alpha
+        ctx.fillStyle = this.color
+        ctx.shadowBlur = 10
+        ctx.shadowColor = this.color
+        ctx.beginPath()
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2)
+        ctx.fill()
+        ctx.shadowBlur = 0
+      }
+    }
+
+    let impactEffect: ImpactEffect | null = null
 
     const animate = (currentTime: number) => {
       if (!startTime) startTime = currentTime
       const elapsedTime = currentTime - startTime
 
-      // Clear canvas with transparency for trail effect
+      // Limpiar canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height)
-      ctx.shadowBlur = 0 // Reset shadow for background
 
-      // Draw lightning
-      if (lightning && lightning.alpha > 0) {
-        lightning.draw()
-        lightning.children.forEach((child) => child.draw())
-        lightning.update()
-      } else if (lightning && lightning.alpha <= 0 && smokeParticles.length === 0) {
-        // Lightning faded, create smoke if not already created
-        createSmoke(canvas.width / 2, canvas.height * 0.8)
+      // Efecto de flash de pantalla
+      if (elapsedTime < 1000) {
+        flashIntensity = Math.sin(elapsedTime * 0.02) * 0.3 + 0.1
+        if (flashIntensity > 0) {
+          ctx.fillStyle = `rgba(255, 255, 0, ${flashIntensity * 0.1})`
+          ctx.fillRect(0, 0, canvas.width, canvas.height)
+        }
       }
 
-      // Draw smoke
-      smokeParticles = smokeParticles.filter((p) => {
-        p.update()
-        p.draw()
-        return p.alpha > 0
+      // Crear rayos iniciales
+      if (elapsedTime < 1200 && lightningBolts.length < 3) {
+        if (Math.random() < 0.1) {
+          lightningBolts.push(new LightningBolt())
+        }
+      }
+
+      // Actualizar y dibujar rayos
+      lightningBolts = lightningBolts.filter((bolt) => {
+        bolt.update()
+        bolt.draw()
+        return bolt.alpha > 0
       })
 
-      if (elapsedTime < duration || smokeParticles.length > 0) {
+      // Crear efecto de impacto
+      if (elapsedTime > 800 && !impactCreated) {
+        impactEffect = new ImpactEffect(canvas.width / 2, canvas.height * 0.85)
+
+        // Crear humo
+        for (let i = 0; i < 40; i++) {
+          smokeParticles.push(new SmokeParticle(canvas.width / 2, canvas.height * 0.85))
+        }
+
+        impactCreated = true
+      }
+
+      // Actualizar y dibujar efecto de impacto
+      if (impactEffect) {
+        impactEffect.update()
+        impactEffect.draw()
+      }
+
+      // Actualizar y dibujar humo
+      smokeParticles = smokeParticles.filter((particle) => {
+        particle.update()
+        particle.draw()
+        return particle.alpha > 0
+      })
+
+      // Continuar animación
+      if (elapsedTime < duration || smokeParticles.length > 0 || lightningBolts.length > 0) {
         animationId = requestAnimationFrame(animate)
-      } else {
-        // Stop animation when all effects are done
-        cancelAnimationFrame(animationId)
       }
     }
 
-    // Start the animation
-    generateLightning()
+    // Iniciar animación
     animationId = requestAnimationFrame(animate)
 
     return () => {
