@@ -40,6 +40,87 @@ export function LightningStrike({ duration = 3000 }: LightningStrikeProps) {
     let smokeParticles: SmokeParticle[] = []
     let flashIntensity = 0
     let impactCreated = false
+    let consensusText: ConsensusText | null = null
+
+    // Clase para el texto "Consensus"
+    class ConsensusText {
+      x: number
+      y: number
+      scale: number
+      alpha: number
+      rotation: number
+      glowIntensity: number
+
+      constructor(x: number, y: number) {
+        this.x = x
+        this.y = y
+        this.scale = 0.1 // Empezar pequeño
+        this.alpha = 0
+        this.rotation = 0
+        this.glowIntensity = 0
+      }
+
+      update() {
+        // Animación de entrada (primeros 0.5 segundos)
+        if (this.scale < 1) {
+          this.scale += 0.08 // Crecimiento rápido
+          this.alpha = Math.min(this.alpha + 0.1, 1)
+          this.glowIntensity = Math.min(this.glowIntensity + 0.15, 1)
+        } else {
+          // Mantener por un momento, luego desvanecer
+          setTimeout(() => {
+            this.alpha -= 0.02
+            this.glowIntensity -= 0.03
+          }, 800) // Esperar 800ms antes de empezar a desvanecer
+        }
+
+        // Rotación sutil
+        this.rotation += 0.01
+      }
+
+      draw() {
+        if (!ctx || this.alpha <= 0) return
+
+        ctx.save()
+        ctx.translate(this.x, this.y)
+        ctx.scale(this.scale, this.scale)
+        ctx.rotate(this.rotation)
+
+        // Configurar fuente
+        const fontSize = Math.min(canvas.width * 0.08, 80) // Responsive font size
+        ctx.font = `bold ${fontSize}px Arial, sans-serif`
+        ctx.textAlign = "center"
+        ctx.textBaseline = "middle"
+
+        // Efecto de glow múltiple (capas exteriores)
+        for (let i = 0; i < 3; i++) {
+          ctx.globalAlpha = this.alpha * this.glowIntensity * (0.3 - i * 0.1)
+          ctx.strokeStyle = lightningColors.glow
+          ctx.lineWidth = 8 - i * 2
+          ctx.shadowBlur = 30 + i * 10
+          ctx.shadowColor = lightningColors.glow
+          ctx.strokeText("CONSENSUS", 0, 0)
+        }
+
+        // Texto principal con glow
+        ctx.globalAlpha = this.alpha
+        ctx.fillStyle = lightningColors.bright
+        ctx.shadowBlur = 20 * this.glowIntensity
+        ctx.shadowColor = lightningColors.core
+        ctx.fillText("CONSENSUS", 0, 0)
+
+        // Núcleo brillante
+        ctx.globalAlpha = this.alpha * this.glowIntensity
+        ctx.fillStyle = lightningColors.flash
+        ctx.shadowBlur = 10
+        ctx.shadowColor = lightningColors.flash
+        ctx.fillText("CONSENSUS", 0, 0)
+
+        // Reset shadow
+        ctx.shadowBlur = 0
+        ctx.restore()
+      }
+    }
 
     // Clase para el rayo principal
     class LightningBolt {
@@ -332,14 +413,20 @@ export function LightningStrike({ duration = 3000 }: LightningStrikeProps) {
         return bolt.alpha > 0
       })
 
-      // Crear efecto de impacto
+      // Crear efecto de impacto y texto
       if (elapsedTime > 800 && !impactCreated) {
-        impactEffect = new ImpactEffect(canvas.width / 2, canvas.height * 0.85)
+        const impactX = canvas.width / 2
+        const impactY = canvas.height * 0.85
+
+        impactEffect = new ImpactEffect(impactX, impactY)
 
         // Crear humo
         for (let i = 0; i < 40; i++) {
-          smokeParticles.push(new SmokeParticle(canvas.width / 2, canvas.height * 0.85))
+          smokeParticles.push(new SmokeParticle(impactX, impactY))
         }
+
+        // Crear texto "CONSENSUS" en el centro de la pantalla
+        consensusText = new ConsensusText(canvas.width / 2, canvas.height / 2)
 
         impactCreated = true
       }
@@ -357,8 +444,19 @@ export function LightningStrike({ duration = 3000 }: LightningStrikeProps) {
         return particle.alpha > 0
       })
 
+      // Actualizar y dibujar texto "CONSENSUS"
+      if (consensusText) {
+        consensusText.update()
+        consensusText.draw()
+
+        // Remover el texto cuando se desvanezca completamente
+        if (consensusText.alpha <= 0) {
+          consensusText = null
+        }
+      }
+
       // Continuar animación
-      if (elapsedTime < duration || smokeParticles.length > 0 || lightningBolts.length > 0) {
+      if (elapsedTime < duration || smokeParticles.length > 0 || lightningBolts.length > 0 || consensusText) {
         animationId = requestAnimationFrame(animate)
       }
     }
