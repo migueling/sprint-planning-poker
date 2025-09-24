@@ -17,6 +17,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import { EditableStoryTitle } from "./editable-story-title"
 import type { UserStory } from "../../actions"
 import { useI18n } from "@/lib/i18n"
 
@@ -27,6 +28,7 @@ interface ManageStoriesTabProps {
   onRemoveStory: (index: number) => void
   onRemoveAllStories: () => void
   onAddStory: (title: string) => void
+  onUpdateStory: (storyIndex: number, newTitle: string) => Promise<boolean> // Nueva prop
   onResetVotes: () => void
   loading: boolean
 }
@@ -38,6 +40,7 @@ export function ManageStoriesTab({
   onRemoveStory,
   onRemoveAllStories,
   onAddStory,
+  onUpdateStory, // Nueva prop
   onResetVotes,
   loading,
 }: ManageStoriesTabProps) {
@@ -80,7 +83,14 @@ export function ManageStoriesTab({
             </div>
           ) : (
             <div className="p-4 border-2 border-secondary/20 rounded-lg bg-accent/30">
-              <h3 className="font-medium text-secondary">{activeStory?.title}</h3>
+              <EditableStoryTitle
+                title={activeStory?.title || ""}
+                storyIndex={activeStoryIndex}
+                isOwner={true}
+                hasVotes={false} // Por ahora siempre false, se puede mejorar después
+                onUpdate={onUpdateStory}
+                loading={loading}
+              />
             </div>
           )}
         </CardContent>
@@ -88,7 +98,7 @@ export function ManageStoriesTab({
           <CardFooter className="flex flex-wrap justify-between gap-4">
             <Button
               variant="outline"
-              className="flex-1 btn-outline"
+              className="flex-1 btn-outline bg-transparent"
               disabled={activeStoryIndex === 0 || loading}
               onClick={() => onChangeStory(activeStoryIndex - 1)}
             >
@@ -96,7 +106,7 @@ export function ManageStoriesTab({
             </Button>
             <Button
               variant="outline"
-              className="flex-1 btn-outline"
+              className="flex-1 btn-outline bg-transparent"
               disabled={activeStoryIndex === userStories.length - 1 || loading}
               onClick={() => onChangeStory(activeStoryIndex + 1)}
             >
@@ -107,7 +117,7 @@ export function ManageStoriesTab({
               <AlertDialogTrigger asChild>
                 <Button
                   variant="outline"
-                  className="w-full mt-2 border-destructive/50 text-destructive hover:bg-destructive/10"
+                  className="w-full mt-2 border-destructive/50 text-destructive hover:bg-destructive/10 bg-transparent"
                   disabled={userStories.length <= 1 || loading}
                   onClick={() => setStoryToRemove(activeStoryIndex)}
                 >
@@ -142,6 +152,54 @@ export function ManageStoriesTab({
         )}
       </Card>
 
+      {/* Lista de todas las historias con opción de editar */}
+      {userStories.length > 1 && (
+        <Card className="cyberpunk-card">
+          <CardHeader>
+            <CardTitle>Todas las Historias</CardTitle>
+            <CardDescription>Gestiona todas las historias de usuario de la sesión</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3 max-h-[300px] overflow-y-auto">
+              {userStories.map((story, index) => (
+                <div
+                  key={story.id}
+                  className={`p-3 border rounded-lg transition-colors ${
+                    index === activeStoryIndex ? "border-primary bg-primary/5" : "border-border hover:bg-accent/50"
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1 mr-3">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-xs text-muted-foreground">Historia {index + 1}</span>
+                        {index === activeStoryIndex && (
+                          <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full">Activa</span>
+                        )}
+                      </div>
+                      <EditableStoryTitle
+                        title={story.title}
+                        storyIndex={index}
+                        isOwner={true}
+                        hasVotes={false} // Por ahora siempre false
+                        onUpdate={onUpdateStory}
+                        loading={loading}
+                      />
+                    </div>
+                    <div className="flex gap-2">
+                      {index !== activeStoryIndex && (
+                        <Button variant="outline" size="sm" onClick={() => onChangeStory(index)} disabled={loading}>
+                          Activar
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       <Card className="cyberpunk-card">
         <CardHeader>
           <CardTitle>{t("session.manage.addStory")}</CardTitle>
@@ -174,7 +232,12 @@ export function ManageStoriesTab({
           <CardTitle>Controles de Sesión</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <Button variant="outline" className="w-full btn-outline" onClick={onResetVotes} disabled={loading}>
+          <Button
+            variant="outline"
+            className="w-full btn-outline bg-transparent"
+            onClick={onResetVotes}
+            disabled={loading}
+          >
             <RefreshCw className="h-4 w-4 mr-2" />
             {t("session.results.resetVotes")}
           </Button>
@@ -183,7 +246,7 @@ export function ManageStoriesTab({
             <AlertDialogTrigger asChild>
               <Button
                 variant="outline"
-                className="w-full border-destructive/50 text-destructive hover:bg-destructive/10"
+                className="w-full border-destructive/50 text-destructive hover:bg-destructive/10 bg-transparent"
                 disabled={userStories.length <= 1 || loading}
                 onClick={() => setIsRemovingAllStories(true)}
               >

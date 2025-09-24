@@ -64,6 +64,10 @@ export default function SessionPage({ params }: { params: { id: string } }) {
     }
   })
 
+  const handleUpdateStory = (storyIndex: number, updatedStory: string) => {
+    // Implementación de handleUpdateStory aquí
+  }
+
   if (loading && !sessionState) {
     return (
       <div className="flex min-h-[calc(100vh-7.5rem)] items-center justify-center">
@@ -180,6 +184,7 @@ export default function SessionPage({ params }: { params: { id: string } }) {
               onRemoveStory={handleRemoveStory}
               onRemoveAllStories={handleRemoveAllStories}
               onAddStory={handleAddNewStory}
+              onUpdateStory={handleUpdateStory} // Agregar esta línea
               onResetVotes={handleResetVotes}
               loading={loading}
             />

@@ -18,6 +18,7 @@ import {
   removeParticipant,
   removeUserStory,
   removeAllUserStories,
+  updateUserStory, // Importar la nueva función
 } from "../../actions"
 import { formatDistance } from "date-fns"
 import { es, enUS } from "date-fns/locale"
@@ -173,7 +174,7 @@ export function useSession(sessionId: string) {
 
     return () => {
       clearInterval(intervalId)
-      window.removeEventListener("beforeUnload", handleBeforeUnload)
+      window.removeEventListener("beforeunload", handleBeforeUnload)
     }
   }, [currentUser, sessionId, router, toast, t])
 
@@ -447,6 +448,36 @@ export function useSession(sessionId: string) {
     }
   }
 
+  // Nueva función para actualizar una historia
+  const handleUpdateStory = async (storyIndex: number, newTitle: string) => {
+    try {
+      setLoading(true)
+      const updatedState = await updateUserStory(sessionId, storyIndex, newTitle)
+
+      if (!updatedState) {
+        toast({
+          title: t("common.error"),
+          description: t("session.notifications.error", { message: "No se pudo actualizar la historia" }),
+          variant: "destructive",
+        })
+        return false
+      }
+
+      setSessionState(updatedState)
+
+      toast({
+        title: "Historia actualizada",
+        description: `Historia "${newTitle}" actualizada correctamente`,
+      })
+      return true
+    } catch (error) {
+      console.error("Error updating story:", error)
+      return false
+    } finally {
+      setLoading(false)
+    }
+  }
+
   // Función para formatear el tiempo restante
   const formatTimeRemaining = (expiresAt: number) => {
     if (!expiresAt) return t("session.header.expired")
@@ -546,6 +577,7 @@ export function useSession(sessionId: string) {
     handleRemoveParticipant,
     handleRemoveStory,
     handleRemoveAllStories,
+    handleUpdateStory, // Agregar esta línea
     calculateAverage,
   }
 }

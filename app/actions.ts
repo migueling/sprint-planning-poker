@@ -443,6 +443,38 @@ export async function addUserStory(sessionId: string, title: string): Promise<Se
   return state
 }
 
+// Actualizar una historia existente
+export async function updateUserStory(
+  sessionId: string,
+  storyIndex: number,
+  newTitle: string,
+): Promise<SessionState | null> {
+  const state = await getSessionState(sessionId)
+
+  if (!state) {
+    return null
+  }
+
+  // Verificar que el índice sea válido
+  if (storyIndex < 0 || storyIndex >= state.userStories.length) {
+    return null
+  }
+
+  // Verificar que hay participantes que han votado en esta historia
+  const hasVotes = state.participants.some((p) => p.vote !== null && !p.isObserver)
+
+  // Si hay votos, no permitir editar
+  if (hasVotes && state.activeStoryIndex === storyIndex) {
+    return null
+  }
+
+  // Actualizar el título de la historia
+  state.userStories[storyIndex].title = newTitle.trim()
+
+  await kv.set(`session:${sessionId}`, state)
+  return state
+}
+
 // Eliminar una historia de usuario
 export async function removeUserStory(sessionId: string, storyIndex: number): Promise<SessionState | null> {
   try {
