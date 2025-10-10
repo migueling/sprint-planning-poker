@@ -66,6 +66,37 @@
     --input: 262 50% 20%;
     --ring: 334 100% 58%;
   }
+
+  .halloween {
+    /* Modo Halloween - Oscuro y terrorífico */
+    --background: 25 100% 8%;
+    --foreground: 33 100% 90%;
+
+    --card: 25 100% 12%;
+    --card-foreground: 33 100% 90%;
+
+    --popover: 25 100% 12%;
+    --popover-foreground: 33 100% 90%;
+
+    --primary: 33 100% 50%;
+    --primary-foreground: 25 100% 8%;
+
+    --secondary: 270 100% 60%;
+    --secondary-foreground: 25 100% 8%;
+
+    --muted: 25 50% 20%;
+    --muted-foreground: 33 80% 70%;
+
+    --accent: 120 100% 35%;
+    --accent-foreground: 33 100% 90%;
+
+    --destructive: 0 100% 50%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 25 50% 25%;
+    --input: 25 50% 25%;
+    --ring: 33 100% 50%;
+  }
 }
 
 @layer base {
@@ -127,6 +158,66 @@
       transparent 8px
     );
   }
+
+  /* Modo Halloween - Fondo con telarañas */
+  .halloween body {
+    background-image: radial-gradient(circle at 20% 30%, rgba(255, 165, 0, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 70%, rgba(138, 43, 226, 0.1) 0%, transparent 50%),
+      linear-gradient(to bottom, rgba(255, 140, 0, 0.05) 1px, transparent 1px),
+      linear-gradient(to right, rgba(255, 140, 0, 0.05) 1px, transparent 1px);
+    background-size: 100% 100%, 100% 100%, 60px 60px, 60px 60px;
+    background-position: center;
+  }
+
+  /* Efecto de niebla para modo Halloween */
+  .halloween body::before {
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(255, 140, 0, 0.02) 0px,
+      rgba(255, 140, 0, 0.02) 1px,
+      transparent 1px,
+      transparent 10px
+    );
+  }
+
+  /* Animación de murciélagos para Halloween */
+  .halloween body::after {
+    content: "🦇";
+    position: fixed;
+    font-size: 2rem;
+    opacity: 0.3;
+    animation: fly 20s infinite linear;
+    pointer-events: none;
+    z-index: 9998;
+  }
+
+  @keyframes fly {
+    0% {
+      top: -10%;
+      left: -10%;
+      transform: rotate(0deg);
+    }
+    25% {
+      top: 20%;
+      left: 30%;
+      transform: rotate(45deg);
+    }
+    50% {
+      top: 40%;
+      left: 60%;
+      transform: rotate(-20deg);
+    }
+    75% {
+      top: 60%;
+      left: 80%;
+      transform: rotate(30deg);
+    }
+    100% {
+      top: 110%;
+      left: 110%;
+      transform: rotate(0deg);
+    }
+  }
 }
 
 /* Estilos para las tarjetas de votación */
@@ -169,10 +260,23 @@
   box-shadow: 0 0 15px rgba(5, 217, 232, 0.7);
 }
 
+/* Estilos específicos para modo Halloween */
+.halloween .vote-card-selected {
+  box-shadow: 0 0 20px rgba(255, 140, 0, 0.8), 0 0 40px rgba(255, 140, 0, 0.4);
+}
+
+.halloween .vote-card:hover {
+  box-shadow: 0 0 15px rgba(255, 140, 0, 0.5);
+}
+
 /* Reemplazar animación con gradiente estático */
 .gradient-header {
   background: linear-gradient(90deg, hsl(var(--primary)), hsl(var(--secondary)), hsl(var(--accent)));
   position: relative;
+}
+
+.halloween .gradient-header {
+  background: linear-gradient(90deg, #ff8c00, #8b00ff, #00ff00, #ff8c00);
 }
 
 .gradient-header::after {
@@ -197,6 +301,12 @@
   text-shadow: 0 0 5px rgba(255, 42, 109, 0.7), 0 0 10px rgba(255, 42, 109, 0.5), 0 0 15px rgba(255, 42, 109, 0.3);
 }
 
+.halloween .neon-text {
+  color: #ff8c00;
+  text-shadow: 0 0 5px rgba(255, 140, 0, 0.8), 0 0 10px rgba(255, 140, 0, 0.6), 0 0 15px rgba(255, 140, 0, 0.4), 0 0
+    20px rgba(255, 140, 0, 0.2);
+}
+
 .neon-text-secondary {
   position: relative;
   color: hsl(var(--secondary));
@@ -205,6 +315,11 @@
 
 .dark .neon-text-secondary {
   text-shadow: 0 0 5px rgba(5, 217, 232, 0.7), 0 0 10px rgba(5, 217, 232, 0.5), 0 0 15px rgba(5, 217, 232, 0.3);
+}
+
+.halloween .neon-text-secondary {
+  color: #8b00ff;
+  text-shadow: 0 0 5px rgba(139, 0, 255, 0.8), 0 0 10px rgba(139, 0, 255, 0.6), 0 0 15px rgba(139, 0, 255, 0.4);
 }
 
 /* Borde neón estático */
@@ -221,6 +336,10 @@
   z-index: -1;
 }
 
+.halloween .neon-border::after {
+  background: linear-gradient(45deg, #ff8c00, #8b00ff, #00ff00);
+}
+
 /* Simplificar el efecto de glitch para evitar problemas de layout */
 .glitch-text {
   position: relative;
@@ -229,6 +348,32 @@
   background-clip: text;
   -webkit-background-clip: text;
   font-weight: bold;
+}
+
+.halloween .glitch-text {
+  background: linear-gradient(90deg, #ff8c00, #8b00ff, #00ff00);
+  background-clip: text;
+  -webkit-background-clip: text;
+  animation: spooky-flicker 3s infinite;
+}
+
+@keyframes spooky-flicker {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  55% {
+    opacity: 1;
+  }
+  57% {
+    opacity: 0.9;
+  }
+  60% {
+    opacity: 1;
+  }
 }
 
 /* Estilos para tarjetas con efecto cyberpunk */
@@ -249,6 +394,15 @@
   z-index: 1;
 }
 
+.halloween .cyberpunk-card::before {
+  background: linear-gradient(90deg, #ff8c00, #8b00ff, #00ff00);
+}
+
+.halloween .cyberpunk-card {
+  border: 1px solid rgba(255, 140, 0, 0.3);
+  box-shadow: 0 0 10px rgba(255, 140, 0, 0.2);
+}
+
 /* Estilos para botones con efecto cyberpunk */
 .cyberpunk-button {
   position: relative;
@@ -259,7 +413,12 @@
   background-clip: padding-box, border-box;
   background-image: linear-gradient(to right, hsl(var(--background)), hsl(var(--background))),
     linear-gradient(90deg, hsl(var(--primary)), hsl(var(--secondary)));
-  color: hsl(var(--foreground)) !important; /* Forzar color de texto para mejor visibilidad */
+  color: hsl(var(--foreground)) !important;
+}
+
+.halloween .cyberpunk-button {
+  background-image: linear-gradient(to right, hsl(var(--background)), hsl(var(--background))),
+    linear-gradient(90deg, #ff8c00, #8b00ff);
 }
 
 /* Botones primarios y secundarios con mejor contraste */
@@ -285,6 +444,10 @@
   box-shadow: 0 5px 15px rgba(255, 42, 109, 0.4);
 }
 
+.halloween .cyberpunk-button:hover {
+  box-shadow: 0 5px 15px rgba(255, 140, 0, 0.5);
+}
+
 /* Estilos para inputs con efecto cyberpunk */
 .cyberpunk-input {
   border: 1px solid hsl(var(--border));
@@ -298,6 +461,15 @@
 
 .dark .cyberpunk-input:focus {
   box-shadow: 0 0 0 2px rgba(255, 42, 109, 0.4);
+}
+
+.halloween .cyberpunk-input {
+  border-color: rgba(255, 140, 0, 0.3);
+}
+
+.halloween .cyberpunk-input:focus {
+  border-color: #ff8c00;
+  box-shadow: 0 0 0 2px rgba(255, 140, 0, 0.3);
 }
 
 /* Estilos para scanlines (efecto CRT) - solo visible en modo oscuro */
@@ -316,6 +488,11 @@
 
 .dark .scanlines {
   opacity: 0.1;
+}
+
+.halloween .scanlines {
+  opacity: 0.15;
+  background: linear-gradient(to bottom, transparent 50%, rgba(255, 140, 0, 0.03) 50%);
 }
 
 /* Mejoras para botones estándar */
@@ -347,4 +524,88 @@
 
 .dark .btn-secondary {
   color: black !important;
+}
+
+/* Mejoras específicas para botones en modo Halloween */
+.halloween .btn-primary {
+  color: black !important;
+  background: #ff8c00;
+}
+
+.halloween .btn-secondary {
+  color: white !important;
+  background: #8b00ff;
+}
+
+/* Decoraciones de Halloween */
+.halloween-decoration {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9997;
+  font-size: 1.5rem;
+  opacity: 0.4;
+}
+
+.halloween .halloween-pumpkin-left {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  font-size: 3rem;
+  opacity: 0.3;
+  pointer-events: none;
+  z-index: 9997;
+  animation: float 3s ease-in-out infinite;
+}
+
+.halloween .halloween-pumpkin-right {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  font-size: 3rem;
+  opacity: 0.3;
+  pointer-events: none;
+  z-index: 9997;
+  animation: float 3s ease-in-out infinite 1.5s;
+}
+
+.halloween .halloween-ghost {
+  position: fixed;
+  top: 50%;
+  right: 10px;
+  font-size: 2rem;
+  opacity: 0.2;
+  pointer-events: none;
+  z-index: 9997;
+  animation: float 4s ease-in-out infinite;
+}
+
+.halloween .halloween-spider {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  font-size: 1.5rem;
+  opacity: 0.3;
+  pointer-events: none;
+  z-index: 9997;
+  animation: swing 2s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes swing {
+  0%,
+  100% {
+    transform: translateX(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateX(10px) rotate(5deg);
+  }
 }

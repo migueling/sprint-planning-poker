@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { I18nProvider } from "@/lib/i18n"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
+import { HalloweenDecorations } from "@/components/halloween-decorations"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -26,6 +27,7 @@ export default function RootLayout({
         <I18nProvider>
           <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
             <div className="relative flex min-h-screen flex-col">
+              <HalloweenDecorations />
               <Header />
               <main className="flex-1">{children}</main>
               <Footer />
