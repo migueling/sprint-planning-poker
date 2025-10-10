@@ -25,7 +25,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.className} min-h-screen bg-background`}>
         <I18nProvider>
-          <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
+          <ThemeProvider attribute="class" defaultTheme="halloween" enableSystem disableTransitionOnChange>
             <div className="relative flex min-h-screen flex-col">
               <HalloweenDecorations />
               <Header />

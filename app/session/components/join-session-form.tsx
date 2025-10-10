@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
-import { Eye, Zap } from "lucide-react"
+import { Eye, Ghost } from "lucide-react"
 import type { Participant } from "../../actions"
 import { useI18n } from "@/lib/i18n"
 
@@ -42,7 +42,7 @@ export function JoinSessionForm({
       <Card className="w-full max-w-md border-2 border-primary/20 shadow-lg neon-border cyberpunk-card">
         <CardHeader>
           <CardTitle className="text-2xl neon-text flex items-center gap-2">
-            <Zap className="h-5 w-5 text-primary" />
+            <Ghost className="h-5 w-5 text-primary" />
             {t("header.title")}
           </CardTitle>
           <CardDescription>

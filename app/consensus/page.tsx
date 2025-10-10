@@ -4,7 +4,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { LightningStrike } from "@/components/lightning-strike"
-import { Zap, RotateCcw } from "lucide-react"
+import { Ghost, RotateCcw } from "lucide-react"
 
 export default function ConsensusTestPage() {
   const [showLightning, setShowLightning] = useState(false)
@@ -32,7 +32,7 @@ export default function ConsensusTestPage() {
       <div className="container mx-auto p-8 max-w-4xl">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold glitch-text mb-4 flex items-center justify-center gap-3">
-            <Zap className="h-10 w-10 text-primary" />
+            <Ghost className="h-10 w-10 text-primary" />
             Lightning Strike Test
           </h1>
           <p className="text-muted-foreground text-lg">Test page for the consensus celebration effect</p>
@@ -61,7 +61,7 @@ export default function ConsensusTestPage() {
                   </>
                 ) : (
                   <>
-                    <Zap className="h-5 w-5 mr-2" />
+                    <Ghost className="h-5 w-5 mr-2" />
                     Trigger Lightning Strike
                   </>
                 )}
@@ -79,7 +79,7 @@ export default function ConsensusTestPage() {
           {/* Effect Details */}
           <Card className="cyberpunk-card">
             <CardHeader>
-              <CardTitle className="text-xl neon-text-secondary">🎆 Effect Details</CardTitle>
+              <CardTitle className="text-xl neon-text-secondary">🎃 Effect Details</CardTitle>
               <CardDescription>What happens during the lightning strike effect</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
