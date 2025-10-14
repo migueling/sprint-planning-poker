@@ -1,39 +1,75 @@
 "use client"
 import { Moon, Sun, Ghost } from "lucide-react"
-import { useTheme } from "next-themes"
+import { useTheme } from "@/components/theme-provider"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { useI18n } from "@/lib/i18n"
+import { useEffect, useState } from "react"
 
 export function ThemeToggle() {
   const { setTheme, theme } = useTheme()
   const { t } = useI18n()
+  const [mounted, setMounted] = useState(false)
+  const [currentTheme, setCurrentTheme] = useState<string>("halloween")
+
+  useEffect(() => {
+    setMounted(true)
+
+    // Obtener el tema actual o usar Halloween por defecto
+    const savedTheme = localStorage.getItem("sprint-poker-theme") || "halloween"
+    setCurrentTheme(savedTheme)
+
+    // Asegurar que el tema sea Halloween por defecto si no hay uno guardado
+    if (!theme || theme === "system") {
+      setTheme("halloween")
+      document.documentElement.className = "halloween"
+    } else {
+      setCurrentTheme(theme)
+    }
+  }, [theme, setTheme])
+
+  if (!mounted) {
+    return (
+      <Button variant="ghost" size="icon" className="h-9 w-9">
+        <Ghost className="h-4 w-4" />
+        <span className="sr-only">Toggle theme</span>
+      </Button>
+    )
+  }
+
+  const handleThemeChange = (newTheme: string) => {
+    setTheme(newTheme)
+    setCurrentTheme(newTheme)
+    // Forzar recarga de estilos
+    setTimeout(() => {
+      document.documentElement.className = newTheme
+    }, 0)
+  }
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon" className="h-9 w-9">
-          <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0 halloween:rotate-0 halloween:scale-0" />
-          <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100 halloween:rotate-90 halloween:scale-0" />
-          <Ghost className="absolute h-4 w-4 rotate-90 scale-0 transition-all halloween:rotate-0 halloween:scale-100" />
+          {currentTheme === "light" && <Sun className="h-4 w-4" />}
+          {currentTheme === "dark" && <Moon className="h-4 w-4" />}
+          {currentTheme === "halloween" && <Ghost className="h-4 w-4" />}
           <span className="sr-only">Toggle theme</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => setTheme("light")}>
-          {theme === "light" && "✓ "}
+        <DropdownMenuItem onClick={() => handleThemeChange("light")}>
+          <Sun className="h-4 w-4 mr-2" />
+          {currentTheme === "light" && "✓ "}
           {t("theme.light")}
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("dark")}>
-          {theme === "dark" && "✓ "}
+        <DropdownMenuItem onClick={() => handleThemeChange("dark")}>
+          <Moon className="h-4 w-4 mr-2" />
+          {currentTheme === "dark" && "✓ "}
           {t("theme.dark")}
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("halloween")}>
-          {theme === "halloween" && "✓ "}🎃 Halloween
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("system")}>
-          {theme === "system" && "✓ "}
-          {t("theme.system")}
+        <DropdownMenuItem onClick={() => handleThemeChange("halloween")}>
+          <Ghost className="h-4 w-4 mr-2" />
+          {currentTheme === "halloween" && "✓ "}🎃 Halloween
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

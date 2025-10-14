@@ -7,6 +7,7 @@ import { I18nProvider } from "@/lib/i18n"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { HalloweenDecorations } from "@/components/halloween-decorations"
+import Script from "next/script"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -22,10 +23,27 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className="halloween">
+      <head>
+        <Script id="theme-init" strategy="beforeInteractive">
+          {`
+            try {
+              const theme = localStorage.getItem('sprint-poker-theme') || 'halloween';
+              document.documentElement.className = theme;
+            } catch (e) {
+              document.documentElement.className = 'halloween';
+            }
+          `}
+        </Script>
+      </head>
       <body className={`${inter.className} min-h-screen bg-background`}>
         <I18nProvider>
-          <ThemeProvider attribute="class" defaultTheme="halloween" enableSystem disableTransitionOnChange>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="halloween"
+            enableSystem={false}
+            storageKey="sprint-poker-theme"
+          >
             <div className="relative flex min-h-screen flex-col">
               <HalloweenDecorations />
               <Header />

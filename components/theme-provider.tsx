@@ -1,10 +1,27 @@
 "use client"
-import { ThemeProvider as NextThemesProvider, useTheme as useNextTheme } from "next-themes"
+import { ThemeProvider as NextThemesProvider } from "next-themes"
 import type { ThemeProviderProps } from "next-themes"
+import { useEffect, useState } from "react"
 
 export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+
+    // Forzar tema Halloween si no hay ninguno guardado
+    const savedTheme = localStorage.getItem("sprint-poker-theme")
+    if (!savedTheme) {
+      localStorage.setItem("sprint-poker-theme", "halloween")
+      document.documentElement.className = "halloween"
+    }
+  }, [])
+
+  if (!mounted) {
+    return null
+  }
+
   return <NextThemesProvider {...props}>{children}</NextThemesProvider>
 }
 
-// Re-export the useTheme hook from next-themes
-export const useTheme = useNextTheme
+export { useTheme } from "next-themes"
