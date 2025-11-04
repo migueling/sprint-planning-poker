@@ -23,7 +23,7 @@
     "date-fns": "latest",
     "lucide-react": "^0.454.0",
     "nanoid": "latest",
-    "next": "14.2.16",
+    "next": "14.2.5",
     "next-themes": "latest",
     "react": "^18",
     "react-dom": "^18",

@@ -9,11 +9,10 @@ export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
   useEffect(() => {
     setMounted(true)
 
-    // Forzar tema Halloween si no hay ninguno guardado
     const savedTheme = localStorage.getItem("sprint-poker-theme")
     if (!savedTheme) {
-      localStorage.setItem("sprint-poker-theme", "halloween")
-      document.documentElement.className = "halloween"
+      localStorage.setItem("sprint-poker-theme", "christmas")
+      document.documentElement.className = "christmas"
     }
   }, [])
 

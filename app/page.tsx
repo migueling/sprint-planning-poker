@@ -7,7 +7,8 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Eye, Ghost, Plus, LogIn } from "lucide-react"
+import { Eye, Plus, LogIn } from "lucide-react"
+import { ThemeLogo } from "@/components/theme-logo"
 import { Switch } from "@/components/ui/switch"
 import { createSession } from "./actions"
 import { useI18n } from "@/lib/i18n"
@@ -90,7 +91,7 @@ export default function HomePage() {
     <div className="flex min-h-[calc(100vh-7.5rem)] items-center justify-center p-4">
       <div className="flex flex-col items-center justify-center py-8">
         <h1 className="text-4xl font-bold glitch-text mb-2 flex items-center gap-2">
-          <Ghost className="h-8 w-8 text-primary" />
+          <ThemeLogo className="h-8 w-8 text-primary" />
           {t("home.title")}
         </h1>
         <p className="text-muted-foreground text-center max-w-2xl mb-8">

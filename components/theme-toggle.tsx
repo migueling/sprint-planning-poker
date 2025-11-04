@@ -1,5 +1,5 @@
 "use client"
-import { Moon, Sun, Ghost } from "lucide-react"
+import { Moon, Sun, Ghost, TreePine } from "lucide-react"
 import { useTheme } from "@/components/theme-provider"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
@@ -10,19 +10,17 @@ export function ThemeToggle() {
   const { setTheme, theme } = useTheme()
   const { t } = useI18n()
   const [mounted, setMounted] = useState(false)
-  const [currentTheme, setCurrentTheme] = useState<string>("halloween")
+  const [currentTheme, setCurrentTheme] = useState<string>("christmas")
 
   useEffect(() => {
     setMounted(true)
 
-    // Obtener el tema actual o usar Halloween por defecto
-    const savedTheme = localStorage.getItem("sprint-poker-theme") || "halloween"
+    const savedTheme = localStorage.getItem("sprint-poker-theme") || "christmas"
     setCurrentTheme(savedTheme)
 
-    // Asegurar que el tema sea Halloween por defecto si no hay uno guardado
     if (!theme || theme === "system") {
-      setTheme("halloween")
-      document.documentElement.className = "halloween"
+      setTheme("christmas")
+      document.documentElement.className = "christmas"
     } else {
       setCurrentTheme(theme)
     }
@@ -31,7 +29,7 @@ export function ThemeToggle() {
   if (!mounted) {
     return (
       <Button variant="ghost" size="icon" className="h-9 w-9">
-        <Ghost className="h-4 w-4" />
+        <TreePine className="h-4 w-4" />
         <span className="sr-only">Toggle theme</span>
       </Button>
     )
@@ -53,6 +51,7 @@ export function ThemeToggle() {
           {currentTheme === "light" && <Sun className="h-4 w-4" />}
           {currentTheme === "dark" && <Moon className="h-4 w-4" />}
           {currentTheme === "halloween" && <Ghost className="h-4 w-4" />}
+          {currentTheme === "christmas" && <TreePine className="h-4 w-4" />}
           <span className="sr-only">Toggle theme</span>
         </Button>
       </DropdownMenuTrigger>
@@ -69,7 +68,13 @@ export function ThemeToggle() {
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => handleThemeChange("halloween")}>
           <Ghost className="h-4 w-4 mr-2" />
-          {currentTheme === "halloween" && "✓ "}🎃 Halloween
+          {currentTheme === "halloween" && "✓ "}
+          Halloween
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => handleThemeChange("christmas")}>
+          <TreePine className="h-4 w-4 mr-2" />
+          {currentTheme === "christmas" && "✓ "}
+          Christmas
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
