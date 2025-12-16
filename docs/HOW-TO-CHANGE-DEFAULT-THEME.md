@@ -13,34 +13,34 @@ The application supports multiple themes: `light`, `dark`, `halloween`, and `chr
 This is the **MOST IMPORTANT** file. You need to change the default theme in **THREE** places:
 
 #### Location 1: HTML className attribute
-\`\`\`typescript
+```typescript
 // Find this line (around line 25):
 <html lang="en" suppressHydrationWarning className="halloween">
 
 // Change "halloween" to your desired theme:
 <html lang="en" suppressHydrationWarning className="christmas">
-\`\`\`
+```
 
 #### Location 2: Script fallback value
-\`\`\`typescript
+```typescript
 // Find this line inside the Script tag (around line 29):
 const theme = localStorage.getItem('sprint-poker-theme') || 'halloween';
 
 // Change "halloween" to your desired theme:
 const theme = localStorage.getItem('sprint-poker-theme') || 'christmas';
-\`\`\`
+```
 
 #### Location 3: Script catch block
-\`\`\`typescript
+```typescript
 // Find this line inside the catch block (around line 32):
 document.documentElement.className = 'halloween';
 
 // Change "halloween" to your desired theme:
 document.documentElement.className = 'christmas';
-\`\`\`
+```
 
 #### Location 4: ThemeProvider defaultTheme prop
-\`\`\`typescript
+```typescript
 // Find this line (around line 37):
 <ThemeProvider
   attribute="class"
@@ -56,12 +56,12 @@ document.documentElement.className = 'christmas';
   enableSystem={false}
   storageKey="sprint-poker-theme"
 >
-\`\`\`
+```
 
 ### 2. Update `components/theme-provider.tsx`
 
 #### Location: localStorage default value
-\`\`\`typescript
+```typescript
 // Find this line (around line 13):
 if (!savedTheme) {
   localStorage.setItem("sprint-poker-theme", "halloween")
@@ -73,30 +73,30 @@ if (!savedTheme) {
   localStorage.setItem("sprint-poker-theme", "christmas")
   document.documentElement.className = "christmas"
 }
-\`\`\`
+```
 
 ### 3. Update `components/theme-toggle.tsx`
 
 #### Location 1: Initial state
-\`\`\`typescript
+```typescript
 // Find this line (around line 14):
 const [currentTheme, setCurrentTheme] = useState<string>("halloween")
 
 // Change "halloween" to your desired theme:
 const [currentTheme, setCurrentTheme] = useState<string>("christmas")
-\`\`\`
+```
 
 #### Location 2: localStorage fallback
-\`\`\`typescript
+```typescript
 // Find this line (around line 19):
 const savedTheme = localStorage.getItem("sprint-poker-theme") || "halloween"
 
 // Change "halloween" to your desired theme:
 const savedTheme = localStorage.getItem("sprint-poker-theme") || "christmas"
-\`\`\`
+```
 
 #### Location 3: Theme check fallback
-\`\`\`typescript
+```typescript
 // Find this line (around line 23):
 if (!theme || theme === "system") {
   setTheme("halloween")
@@ -108,10 +108,10 @@ if (!theme || theme === "system") {
   setTheme("christmas")
   document.documentElement.className = "christmas"
 }
-\`\`\`
+```
 
 #### Location 4: Loading state icon
-\`\`\`typescript
+```typescript
 // Find this section (around line 32):
 if (!mounted) {
   return (
@@ -127,7 +127,7 @@ if (!mounted) {
 // For halloween: <Ghost className="h-4 w-4" />
 // For light: <Sun className="h-4 w-4" />
 // For dark: <Moon className="h-4 w-4" />
-\`\`\`
+```
 
 ## Summary Checklist
 
