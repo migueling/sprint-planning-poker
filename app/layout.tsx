@@ -24,27 +24,22 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" suppressHydrationWarning className="christmas">
+    <html lang="en" suppressHydrationWarning className="light">
       <head>
         <Script id="theme-init" strategy="beforeInteractive">
           {`
             try {
-              const theme = localStorage.getItem('sprint-poker-theme') || 'christmas';
+              const theme = localStorage.getItem('sprint-poker-theme') || 'light';
               document.documentElement.className = theme;
             } catch (e) {
-              document.documentElement.className = 'christmas';
+              document.documentElement.className = 'light';
             }
           `}
         </Script>
       </head>
       <body className={`${inter.className} min-h-screen bg-background`}>
         <I18nProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="christmas"
-            enableSystem={false}
-            storageKey="sprint-poker-theme"
-          >
+          <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false} storageKey="sprint-poker-theme">
             <div className="relative flex min-h-screen flex-col">
               <HalloweenDecorations />
               <ChristmasDecorations />
