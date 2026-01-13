@@ -10,17 +10,17 @@ export function ThemeToggle() {
   const { setTheme, theme } = useTheme()
   const { t } = useI18n()
   const [mounted, setMounted] = useState(false)
-  const [currentTheme, setCurrentTheme] = useState<string>("christmas")
+  const [currentTheme, setCurrentTheme] = useState<string>("light")
 
   useEffect(() => {
     setMounted(true)
 
-    const savedTheme = localStorage.getItem("sprint-poker-theme") || "christmas"
+    const savedTheme = localStorage.getItem("sprint-poker-theme") || "light"
     setCurrentTheme(savedTheme)
 
     if (!theme || theme === "system") {
-      setTheme("christmas")
-      document.documentElement.className = "christmas"
+      setTheme("light")
+      document.documentElement.className = "light"
     } else {
       setCurrentTheme(theme)
     }
@@ -29,7 +29,7 @@ export function ThemeToggle() {
   if (!mounted) {
     return (
       <Button variant="ghost" size="icon" className="h-9 w-9">
-        <TreePine className="h-4 w-4" />
+        <Sun className="h-4 w-4" />
         <span className="sr-only">Toggle theme</span>
       </Button>
     )

@@ -11,8 +11,8 @@ export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
 
     const savedTheme = localStorage.getItem("sprint-poker-theme")
     if (!savedTheme) {
-      localStorage.setItem("sprint-poker-theme", "christmas")
-      document.documentElement.className = "christmas"
+      localStorage.setItem("sprint-poker-theme", "light")
+      document.documentElement.className = "light"
     }
   }, [])
 
