@@ -8,7 +8,7 @@ import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { HalloweenDecorations } from "@/components/halloween-decorations"
 import { ChristmasDecorations } from "@/components/christmas-decorations"
-import Script from "next/script"
+
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -26,16 +26,18 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className="light">
       <head>
-        <Script id="theme-init" strategy="beforeInteractive">
-          {`
-            try {
-              const theme = localStorage.getItem('sprint-poker-theme') || 'light';
-              document.documentElement.className = theme;
-            } catch (e) {
-              document.documentElement.className = 'light';
-            }
-          `}
-        </Script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                var theme = localStorage.getItem('sprint-poker-theme') || 'light';
+                document.documentElement.className = theme;
+              } catch (e) {
+                document.documentElement.className = 'light';
+              }
+            `,
+          }}
+        />
       </head>
       <body className={`${inter.className} min-h-screen bg-background`}>
         <I18nProvider>
