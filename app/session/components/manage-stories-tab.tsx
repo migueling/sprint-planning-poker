@@ -3,7 +3,7 @@
 import type React from "react"
 
 import { useState, useRef, useEffect } from "react"
-import { AlertTriangle, Plus, RefreshCw, Trash2, Play } from "lucide-react"
+import { AlertTriangle, Plus, RefreshCw, Trash2, Play, Check } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -49,18 +49,26 @@ export function ManageStoriesTab({
   const [newStoryTitle, setNewStoryTitle] = useState("")
   const [storyToRemove, setStoryToRemove] = useState<number | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+  const shouldRefocusRef = useRef(false)
 
   // Auto-focus the input on mount
   useEffect(() => {
     inputRef.current?.focus()
   }, [])
 
+  // Re-focus the input after loading finishes (from adding a story)
+  useEffect(() => {
+    if (!loading && shouldRefocusRef.current) {
+      shouldRefocusRef.current = false
+      inputRef.current?.focus()
+    }
+  }, [loading])
+
   const handleAddStory = () => {
     if (newStoryTitle.trim()) {
+      shouldRefocusRef.current = true
       onAddStory(newStoryTitle)
       setNewStoryTitle("")
-      // Keep focus on input for rapid entry
-      setTimeout(() => inputRef.current?.focus(), 0)
     }
   }
 
@@ -137,6 +145,14 @@ export function ManageStoriesTab({
                         loading={loading}
                       />
                     </div>
+
+                    {/* Points badge */}
+                    {story.points != null && (
+                      <span className="inline-flex items-center gap-1 text-xs font-semibold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 px-2 py-1 rounded-full shrink-0 whitespace-nowrap">
+                        <Check className="h-3 w-3" />
+                        {story.points} {t("session.manage.pointsLabel")}
+                      </span>
+                    )}
 
                     {/* Actions */}
                     <div className="flex items-center gap-1 shrink-0">
