@@ -173,7 +173,10 @@
       "sessionControls": "Controles de Sesión",
       "deleteAllStories": "Eliminar Todas las Historias",
       "confirmDeleteAll": "¿Estás seguro de que deseas eliminar todas las historias excepto la primera? Esta acción no se puede deshacer y se perderán todas las historias actuales.",
-      "setActive": "Establecer como activa"
+      "setActive": "Establecer como activa",
+      "quickAddPlaceholder": "Escribe una historia y presiona Enter...",
+      "emptyListHint": "Agrega historias usando el campo de arriba. Presiona Enter para agregar r\u00e1pidamente.",
+      "activeLabel": "Activa"
     },
     "notifications": {
       "storyAdded": "Historia añadida",

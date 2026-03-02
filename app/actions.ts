@@ -429,15 +429,17 @@ export async function addUserStory(sessionId: string, title: string): Promise<Se
     state.userStories = []
   }
 
+  const isFirstStory = state.userStories.length === 0
+
   state.userStories.push(newStory)
 
-  // Si es la primera historia, establecer activeStoryIndex a 0
-  // Si ya hay historias, establecer activeStoryIndex a la nueva historia
-  state.activeStoryIndex = state.userStories.length - 1
-
-  // Resetear votos al cambiar de historia
-  state.participants = state.participants.map((p) => ({ ...p, vote: null, lastActive: Date.now() }))
-  state.showResults = false
+  if (isFirstStory) {
+    // Primera historia: activarla y resetear votos
+    state.activeStoryIndex = 0
+    state.participants = state.participants.map((p) => ({ ...p, vote: null, lastActive: Date.now() }))
+    state.showResults = false
+  }
+  // Si ya hay historias, solo se agrega al final sin cambiar la historia activa ni resetear votos
 
   await kv.set(`session:${sessionId}`, state)
   return state

@@ -321,6 +321,7 @@ export function useSession(sessionId: string) {
     if (title.trim()) {
       try {
         setLoading(true)
+        const isFirstStory = !sessionState || sessionState.userStories.length === 0
         const updatedState = await addUserStory(sessionId, title)
 
         if (!updatedState) {
@@ -333,11 +334,15 @@ export function useSession(sessionId: string) {
         }
 
         setSessionState(updatedState)
-        setLastConsensus(null) // Resetear el último consenso al cambiar de historia
+
+        // Only reset consensus if it's the first story (which changes the active story)
+        if (isFirstStory) {
+          setLastConsensus(null)
+        }
 
         toast({
           title: t("session.notifications.storyAdded"),
-          description: `Historia "${title}" añadida`,
+          description: t("session.notifications.storyAddedDescription", { title }),
         })
       } catch (error) {
         console.error("Error adding new story:", error)
