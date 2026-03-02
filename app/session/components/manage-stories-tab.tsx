@@ -83,10 +83,10 @@ export function ManageStoriesTab({
     <div className="grid gap-6">
       {/* Unified stories card */}
       <Card className="cyberpunk-card">
-        <CardHeader className="pb-4">
+        <CardHeader className="pb-2 px-4 pt-4">
           <CardTitle>{t("session.manage.title")}</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-3 px-4 pb-4">
           {/* Quick-add input at the top */}
           <div className="flex gap-2">
             <Input

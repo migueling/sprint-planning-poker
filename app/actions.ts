@@ -202,11 +202,12 @@ export async function getSessionState(sessionId: string): Promise<SessionState |
       state.activeStoryIndex = state.userStories.length > 0 ? 0 : -1
     }
 
-    // Migrar historias antiguas que tengan descripción
+    // Migrar historias antiguas que tengan descripción (preservar points)
     if (state.userStories && state.userStories.length > 0) {
       state.userStories = state.userStories.map((story: any) => ({
         id: story.id,
         title: story.title,
+        ...(story.points != null ? { points: story.points } : {}),
       }))
     }
 
