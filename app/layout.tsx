@@ -9,6 +9,7 @@ import { Footer } from "@/components/footer"
 import { HalloweenDecorations } from "@/components/halloween-decorations"
 import { ChristmasDecorations } from "@/components/christmas-decorations"
 import Script from "next/script"
+import { Analytics } from "@vercel/analytics/next"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -49,6 +50,7 @@ export default function RootLayout({
             </div>
           </ThemeProvider>
         </I18nProvider>
+        <Analytics />
       </body>
     </html>
   )
