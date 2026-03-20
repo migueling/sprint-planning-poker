@@ -43,6 +43,7 @@ export default function SessionPage({ params }: { params: { id: string } }) {
     handleRemoveParticipant,
     handleRemoveStory,
     handleRemoveAllStories,
+    handleUpdateStory,
     calculateAverage,
   } = useSession(params.id)
 
@@ -63,10 +64,6 @@ export default function SessionPage({ params }: { params: { id: string } }) {
       document.body.removeChild(scanlines)
     }
   })
-
-  const handleUpdateStory = (storyIndex: number, updatedStory: string) => {
-    // Implementación de handleUpdateStory aquí
-  }
 
   if (loading && !sessionState) {
     return (

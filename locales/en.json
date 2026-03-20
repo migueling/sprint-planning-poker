@@ -173,7 +173,15 @@
       "sessionControls": "Session Controls",
       "deleteAllStories": "Delete All Stories",
       "confirmDeleteAll": "Are you sure you want to delete all stories except the first one? This action cannot be undone and all current stories will be lost.",
-      "setActive": "Set as active"
+      "setActive": "Set as active",
+      "quickAddPlaceholder": "Type a story and press Enter...",
+      "emptyListHint": "Add stories using the field above. Press Enter to quickly add them.",
+      "activeLabel": "Active",
+      "pointsLabel": "pts",
+      "summaryTotal": "Total",
+      "summaryVoted": "Voted",
+      "summaryPending": "Pending",
+      "summaryPoints": "Points"
     },
     "notifications": {
       "storyAdded": "Story added",

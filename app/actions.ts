@@ -15,6 +15,7 @@ export type Participant = {
 export type UserStory = {
   id: string
   title: string
+  points?: number | null
 }
 
 export type SessionState = {
@@ -201,11 +202,12 @@ export async function getSessionState(sessionId: string): Promise<SessionState |
       state.activeStoryIndex = state.userStories.length > 0 ? 0 : -1
     }
 
-    // Migrar historias antiguas que tengan descripción
+    // Migrar historias antiguas que tengan descripción (preservar points)
     if (state.userStories && state.userStories.length > 0) {
       state.userStories = state.userStories.map((story: any) => ({
         id: story.id,
         title: story.title,
+        ...(story.points != null ? { points: story.points } : {}),
       }))
     }
 
@@ -404,6 +406,33 @@ export async function resetVotes(sessionId: string): Promise<SessionState | null
     return null
   }
 
+  // Save consensus points of the current story before resetting
+  const currentIndex = state.activeStoryIndex
+  if (currentIndex >= 0 && currentIndex < state.userStories.length) {
+    const numericVotes = state.participants
+      .filter((p) => !p.isObserver && typeof p.vote === "number")
+      .map((p) => p.vote as number)
+    if (numericVotes.length > 0) {
+      const voteCounts: Record<number, number> = {}
+      let maxCount = 0
+      let consensusValue = numericVotes[0]
+      numericVotes.forEach((v) => {
+        voteCounts[v] = (voteCounts[v] || 0) + 1
+        if (voteCounts[v] > maxCount) {
+          maxCount = voteCounts[v]
+          consensusValue = v
+        }
+      })
+      const percentage = Math.round((maxCount / numericVotes.length) * 100)
+      if (percentage === 100) {
+        state.userStories[currentIndex].points = consensusValue
+      } else {
+        const avg = Math.round((numericVotes.reduce((s, v) => s + v, 0) / numericVotes.length) * 10) / 10
+        state.userStories[currentIndex].points = avg
+      }
+    }
+  }
+
   state.participants = state.participants.map((p) => ({ ...p, vote: null, lastActive: Date.now() }))
   state.showResults = false
 
@@ -429,15 +458,17 @@ export async function addUserStory(sessionId: string, title: string): Promise<Se
     state.userStories = []
   }
 
+  const isFirstStory = state.userStories.length === 0
+
   state.userStories.push(newStory)
 
-  // Si es la primera historia, establecer activeStoryIndex a 0
-  // Si ya hay historias, establecer activeStoryIndex a la nueva historia
-  state.activeStoryIndex = state.userStories.length - 1
-
-  // Resetear votos al cambiar de historia
-  state.participants = state.participants.map((p) => ({ ...p, vote: null, lastActive: Date.now() }))
-  state.showResults = false
+  if (isFirstStory) {
+    // Primera historia: activarla y resetear votos
+    state.activeStoryIndex = 0
+    state.participants = state.participants.map((p) => ({ ...p, vote: null, lastActive: Date.now() }))
+    state.showResults = false
+  }
+  // Si ya hay historias, solo se agrega al final sin cambiar la historia activa ni resetear votos
 
   await kv.set(`session:${sessionId}`, state)
   return state
@@ -577,6 +608,36 @@ export async function changeActiveStory(sessionId: string, index: number): Promi
   }
 
   if (index >= 0 && index < state.userStories.length) {
+    // Save consensus points of the current story before switching
+    const currentIndex = state.activeStoryIndex
+    if (currentIndex >= 0 && currentIndex < state.userStories.length) {
+      const numericVotes = state.participants
+        .filter((p) => !p.isObserver && typeof p.vote === "number")
+        .map((p) => p.vote as number)
+      if (numericVotes.length > 0) {
+        // Find the most voted value (mode)
+        const voteCounts: Record<number, number> = {}
+        let maxCount = 0
+        let consensusValue = numericVotes[0]
+        numericVotes.forEach((v) => {
+          voteCounts[v] = (voteCounts[v] || 0) + 1
+          if (voteCounts[v] > maxCount) {
+            maxCount = voteCounts[v]
+            consensusValue = v
+          }
+        })
+        const percentage = Math.round((maxCount / numericVotes.length) * 100)
+        // Only save if there was full consensus (100%)
+        if (percentage === 100) {
+          state.userStories[currentIndex].points = consensusValue
+        } else {
+          // Save the average rounded to nearest Fibonacci-ish value
+          const avg = Math.round((numericVotes.reduce((s, v) => s + v, 0) / numericVotes.length) * 10) / 10
+          state.userStories[currentIndex].points = avg
+        }
+      }
+    }
+
     state.activeStoryIndex = index
 
     // Resetear votos al cambiar de historia
