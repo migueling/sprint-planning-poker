@@ -117,13 +117,13 @@ export function ManageStoriesTab({
               </p>
             </div>
           ) : (
-            <div className="space-y-2 max-h-[400px] overflow-y-auto">
+            <div className="space-y-1.5 max-h-[400px] overflow-y-auto">
               {userStories.map((story, index) => {
                 const isActive = index === activeStoryIndex
                 return (
                   <div
                     key={story.id}
-                    className={`flex items-center gap-3 p-3 rounded-lg border transition-colors ${
+                    className={`flex items-center gap-2 px-2 py-1.5 rounded-md border transition-colors ${
                       isActive
                         ? "border-primary bg-primary/5"
                         : "border-border hover:bg-accent/50"
@@ -213,6 +213,36 @@ export function ManageStoriesTab({
                   </div>
                 )
               })}
+            </div>
+          )}
+
+          {/* Summary footer */}
+          {userStories.length > 0 && (
+            <div className="pt-3 border-t border-border">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center">
+                <div className="bg-muted/30 rounded-md px-2 py-1.5">
+                  <div className="text-lg font-semibold text-foreground">{userStories.length}</div>
+                  <div className="text-xs text-muted-foreground">{t("session.manage.summaryTotal")}</div>
+                </div>
+                <div className="bg-emerald-500/10 rounded-md px-2 py-1.5">
+                  <div className="text-lg font-semibold text-emerald-400">
+                    {userStories.filter((s) => s.points != null).length}
+                  </div>
+                  <div className="text-xs text-muted-foreground">{t("session.manage.summaryVoted")}</div>
+                </div>
+                <div className="bg-amber-500/10 rounded-md px-2 py-1.5">
+                  <div className="text-lg font-semibold text-amber-400">
+                    {userStories.filter((s) => s.points == null).length}
+                  </div>
+                  <div className="text-xs text-muted-foreground">{t("session.manage.summaryPending")}</div>
+                </div>
+                <div className="bg-primary/10 rounded-md px-2 py-1.5">
+                  <div className="text-lg font-semibold text-primary">
+                    {userStories.reduce((sum, s) => sum + (s.points ?? 0), 0)}
+                  </div>
+                  <div className="text-xs text-muted-foreground">{t("session.manage.summaryPoints")}</div>
+                </div>
+              </div>
             </div>
           )}
         </CardContent>

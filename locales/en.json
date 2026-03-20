@@ -177,7 +177,11 @@
       "quickAddPlaceholder": "Type a story and press Enter...",
       "emptyListHint": "Add stories using the field above. Press Enter to quickly add them.",
       "activeLabel": "Active",
-      "pointsLabel": "pts"
+      "pointsLabel": "pts",
+      "summaryTotal": "Total",
+      "summaryVoted": "Voted",
+      "summaryPending": "Pending",
+      "summaryPoints": "Points"
     },
     "notifications": {
       "storyAdded": "Story added",
